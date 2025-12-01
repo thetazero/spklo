@@ -56,9 +56,28 @@ function App() {
         </table>
       </div>
 
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Statistics</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-gray-50 rounded">
+            <div className="text-sm text-gray-600">Total Matches</div>
+            <div className="text-2xl font-bold">{engineData.analyzedMatches.length}</div>
+          </div>
+          <div className="p-4 bg-gray-50 rounded">
+            <div className="text-sm text-gray-600">Total BCE Loss</div>
+            <div className="text-2xl font-bold">{engineData.engine.bceLoss.toFixed(2)}</div>
+          </div>
+          <div className="p-4 bg-gray-50 rounded">
+            <div className="text-sm text-gray-600">Average BCE Loss</div>
+            <div className="text-2xl font-bold">
+              {(engineData.engine.bceLoss / engineData.analyzedMatches.length).toFixed(4)}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-semibold mb-4">Match History</h2>
-        <p className="text-gray-600 mb-4">Total matches analyzed: {engineData.analyzedMatches.length}</p>
         <MatchTable matches={engineData.analyzedMatches} />
       </div>
     </div>

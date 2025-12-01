@@ -10,8 +10,11 @@ export interface MatchAnalysis {
 
 export class Engine {
     elos: { [key in PlayerName]: number };
+    bceLoss: number;
+
     constructor() {
         this.elos = {};
+        this.bceLoss = 0;
     }
 
     getElo(player: PlayerName): number {
@@ -23,7 +26,7 @@ export class Engine {
     }
 
     analyzeMatch(match: Match): MatchAnalysis {
-        const K = 32; // K-factor for ELO calculation
+        const K = 32;
 
         // Get combined team ELOs
         const winnerElo = this.getCombinedElo(match.winner);
@@ -34,6 +37,9 @@ export class Engine {
 
         // Calculate ELO change (actual - expected)
         const eloChange = K * (1 - expectedWinProbability);
+
+        // Update BCE loss: -log(p) where p is the predicted probability of the actual outcome
+        this.bceLoss += -Math.log(expectedWinProbability);
 
         const beforeElos: { [key in PlayerName]: number } = {};
         for (const player of match.winner) {
