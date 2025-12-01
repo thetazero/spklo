@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 import { loadMatches } from './data/load'
 import { createEngine, type EngineAndMatches } from './engine/main'
+import { MatchTable } from './components/MatchTable'
 
 function App() {
   const [engineData, setEngineData] = useState<EngineAndMatches | null>(null)
@@ -23,44 +23,45 @@ function App() {
     loadData()
   }, [])
 
-  if (loading) return <div>Loading matches...</div>
-  if (error) return <div>Error: {error}</div>
-  if (!engineData) return <div>No data</div>
+  if (loading) return <div className="p-8">Loading matches...</div>
+  if (error) return <div className="p-8 text-red-600">Error: {error}</div>
+  if (!engineData) return <div className="p-8">No data</div>
 
   const sortedPlayers = Object.entries(engineData.engine.elos)
     .sort(([, a], [, b]) => b - a)
 
   return (
-    <>
-      <h1>Spike ELO Rankings</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8 text-center">Spike ELO Rankings</h1>
 
-      <div className="card">
-        <h2>Player Rankings</h2>
-        <table>
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Player Rankings</h2>
+        <table className="w-full">
           <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Player</th>
-              <th>ELO</th>
+            <tr className="border-b-2 border-gray-300">
+              <th className="p-2 text-left">Rank</th>
+              <th className="p-2 text-left">Player</th>
+              <th className="p-2 text-left">ELO</th>
             </tr>
           </thead>
           <tbody>
             {sortedPlayers.map(([player, elo], index) => (
-              <tr key={player}>
-                <td>{index + 1}</td>
-                <td>{player}</td>
-                <td>{Math.round(elo)}</td>
+              <tr key={player} className="border-b border-gray-200">
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2 font-medium">{player}</td>
+                <td className="p-2 font-semibold">{Math.round(elo)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="card">
-        <h2>Match History</h2>
-        <p>Total matches analyzed: {engineData.analyzedMatches.length}</p>
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-semibold mb-4">Match History</h2>
+        <p className="text-gray-600 mb-4">Total matches analyzed: {engineData.analyzedMatches.length}</p>
+        <MatchTable matches={engineData.analyzedMatches} />
       </div>
-    </>
+    </div>
   )
 }
 
