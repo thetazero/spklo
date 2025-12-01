@@ -10,7 +10,7 @@ describe('createEngine', () => {
       loser: new Set(['PlayerC', 'PlayerD'])
     }
 
-    const result = createEngine([match])
+    const result = createEngine([match], 32)
 
     // All players should start at 1000 ELO
     // Since teams are evenly matched (both 2000 total), expected win probability is 50%
@@ -44,7 +44,7 @@ describe('createEngine', () => {
       }
     ]
 
-    const result = createEngine(matches)
+    const result = createEngine(matches, 32)
 
     // Should have two analyzed matches
     expect(result.analyzedMatches).toHaveLength(2)
@@ -63,7 +63,7 @@ describe('createEngine', () => {
       loser: new Set(['Charlie', 'Diana'])
     }
 
-    const result = createEngine([match])
+    const result = createEngine([match], 32)
     const analysis = result.analyzedMatches[0]
 
     // Verify basic structure
@@ -101,7 +101,7 @@ describe('createEngine', () => {
       }
     ]
 
-    const result = createEngine(matches)
+    const result = createEngine(matches, 32)
 
     // First match - all players start at 1000
     const firstAnalysis = result.analyzedMatches[0]
@@ -117,12 +117,12 @@ describe('createEngine', () => {
 
 describe('Engine', () => {
   it('should return default ELO of 1000 for unknown players', () => {
-    const engine = new Engine()
+    const engine = new Engine(32)
     expect(engine.getElo('UnknownPlayer')).toBe(1000)
   })
 
   it('should calculate combined team ELO correctly', () => {
-    const engine = new Engine()
+    const engine = new Engine(32)
     engine.elos['PlayerA'] = 1200
     engine.elos['PlayerB'] = 1300
 
