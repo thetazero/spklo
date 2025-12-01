@@ -135,7 +135,7 @@ export class Engine {
 
             // Update losing team pair
             const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
-            this.pairwiseAdjustments.set(loserKey, loserCurrentAdj + pairwiseDelta);
+            this.pairwiseAdjustments.set(loserKey, loserCurrentAdj - pairwiseDelta);
         }
 
         return {
@@ -160,7 +160,7 @@ export function createEngine(
     highK: number = 128,
     normalK: number = 16,
     highKMatchCount: number = 10,
-    pairwiseFactor: number = 0.1,
+    pairwiseFactor: number = 0.2,
 ): EngineAndMatches {
     const engine = new Engine(highK, normalK, highKMatchCount, pairwiseFactor);
     const analyzed_matches: MatchAnalysis[] = [];
