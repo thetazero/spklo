@@ -56,6 +56,7 @@ export function TeamRankings({ engine }: TeamRankingsProps) {
         },
       ]
     })
+    .sort((a, b) => (b[0].simple as number) - (a[0].simple as number))
 
   if (rows.length === 0) {
     return null
