@@ -1,0 +1,970 @@
+[
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "AN",
+    "lose": "IS"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "IL",
+    "lose": "NS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AN",
+    "lose": "IS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "LS",
+    "lose": "AI"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "LS",
+    "lose": "AI"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "LS",
+    "lose": "AI"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AI",
+    "lose": "GN"
+  },
+  {
+    "win": "LS",
+    "lose": "GI"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AG",
+    "lose": "LS"
+  },
+  {
+    "win": "GL",
+    "lose": "AI"
+  },
+  {
+    "win": "GI",
+    "lose": "LS"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "AS",
+    "lose": "IN"
+  },
+  {
+    "win": "AS",
+    "lose": "LN"
+  },
+  {
+    "win": "IL",
+    "lose": "NS"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "AI",
+    "lose": "NS"
+  },
+  {
+    "win": "LS",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "LS",
+    "lose": "AI"
+  },
+  {
+    "win": "LN",
+    "lose": "IS"
+  },
+  {
+    "win": "LS",
+    "lose": "IN"
+  },
+  {
+    "win": "NS",
+    "lose": "GI"
+  },
+  {
+    "win": "LS",
+    "lose": "GN"
+  },
+  {
+    "win": "GL",
+    "lose": "IN"
+  },
+  {
+    "win": "IL",
+    "lose": "GS"
+  },
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "IN",
+    "lose": "GS"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "IL",
+    "lose": "NS"
+  },
+  {
+    "win": "IL",
+    "lose": "AS"
+  },
+  {
+    "win": "AN",
+    "lose": "IS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "IN",
+    "lose": "LS"
+  },
+  {
+    "win": "LS",
+    "lose": "AI"
+  },
+  {
+    "win": "IN",
+    "lose": "AS"
+  },
+  {
+    "win": "AS",
+    "lose": "LN"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "IL",
+    "lose": "AS"
+  },
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "AI",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AI",
+    "lose": "GN"
+  },
+  {
+    "win": "GL",
+    "lose": "AI"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "NS",
+    "lose": "GL"
+  },
+  {
+    "win": "IN",
+    "lose": "GS"
+  },
+  {
+    "win": "IN",
+    "lose": "AS"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AS",
+    "lose": "LN"
+  },
+  {
+    "win": "GN",
+    "lose": "LS"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "IL",
+    "lose": "NS"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "IN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "IN",
+    "lose": "LS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "AL",
+    "lose": "IS"
+  },
+  {
+    "win": "NS",
+    "lose": "AI"
+  },
+  {
+    "win": "IL",
+    "lose": "AN"
+  },
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "IL",
+    "lose": "AS"
+  },
+  {
+    "win": "AI",
+    "lose": "NS"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "AN",
+    "lose": "GL"
+  },
+  {
+    "win": "GN",
+    "lose": "AS"
+  },
+  {
+    "win": "LN",
+    "lose": "GS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "AS",
+    "lose": "GL"
+  },
+  {
+    "win": "LN",
+    "lose": "AG"
+  },
+  {
+    "win": "AN",
+    "lose": "GS"
+  },
+  {
+    "win": "GL",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AS",
+    "lose": "GL"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "AI",
+    "lose": "NS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "IL",
+    "lose": "NS"
+  },
+  {
+    "win": "IN",
+    "lose": "AS"
+  },
+  {
+    "win": "IL",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "LS",
+    "lose": "IN"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "GN",
+    "lose": "IL"
+  },
+  {
+    "win": "AN",
+    "lose": "GL"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "IN",
+    "lose": "GL"
+  },
+  {
+    "win": "AN",
+    "lose": "GI"
+  },
+  {
+    "win": "AG",
+    "lose": "IL"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "GN",
+    "lose": "LS"
+  },
+  {
+    "win": "GS",
+    "lose": "IN"
+  },
+  {
+    "win": "AI",
+    "lose": "GN"
+  },
+  {
+    "win": "AL",
+    "lose": "GI"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "GN",
+    "lose": "LS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "AS",
+    "lose": "LN"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "AS",
+    "lose": "IN"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "LN",
+    "lose": "AG"
+  },
+  {
+    "win": "GN",
+    "lose": "IL"
+  },
+  {
+    "win": "GL",
+    "lose": "IS"
+  },
+  {
+    "win": "AI",
+    "lose": "GS"
+  },
+  {
+    "win": "NS",
+    "lose": "AI"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "GL",
+    "lose": "IN"
+  },
+  {
+    "win": "LS",
+    "lose": "GI"
+  },
+  {
+    "win": "AG",
+    "lose": "IS"
+  },
+  {
+    "win": "AS",
+    "lose": "IN"
+  },
+  {
+    "win": "AL",
+    "lose": "NS"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "IN",
+    "lose": "AG"
+  },
+  {
+    "win": "IL",
+    "lose": "AG"
+  },
+  {
+    "win": "AN",
+    "lose": "GL"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "LS",
+    "lose": "GN"
+  },
+  {
+    "win": "AI",
+    "lose": "GL"
+  },
+  {
+    "win": "AG",
+    "lose": "NS"
+  },
+  {
+    "win": "NS",
+    "lose": "GL"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "AL",
+    "lose": "IN"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "AI"
+  },
+  {
+    "win": "IN",
+    "lose": "AL"
+  },
+  {
+    "win": "AN",
+    "lose": "IL"
+  },
+  {
+    "win": "GL",
+    "lose": "AI"
+  },
+  {
+    "win": "GN",
+    "lose": "AL"
+  },
+  {
+    "win": "LN",
+    "lose": "GI"
+  },
+  {
+    "win": "IN",
+    "lose": "GS"
+  },
+  {
+    "win": "AI",
+    "lose": "NS"
+  },
+  {
+    "win": "AS",
+    "lose": "IL"
+  },
+  {
+    "win": "AG",
+    "lose": "LS"
+  },
+  {
+    "win": "AN",
+    "lose": "GL"
+  },
+  {
+    "win": "GN",
+    "lose": "IL"
+  },
+  {
+    "win": "IS",
+    "lose": "GN"
+  },
+  {
+    "win": "AS",
+    "lose": "IN"
+  },
+  {
+    "win": "AI",
+    "lose": "LS"
+  },
+  {
+    "win": "AG",
+    "lose": "LN"
+  },
+  {
+    "win": "IN",
+    "lose": "GL"
+  },
+  {
+    "win": "GN",
+    "lose": "IL"
+  },
+  {
+    "win": "GL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "GI"
+  },
+  {
+    "win": "GN",
+    "lose": "IL"
+  },
+  {
+    "win": "GL",
+    "lose": "IN"
+  },
+  {
+    "win": "LN",
+    "lose": "GI"
+  },
+  {
+    "win": "IL",
+    "lose": "GN"
+  },
+  {
+    "win": "IN",
+    "lose": "LS"
+  },
+  {
+    "win": "NS",
+    "lose": "IL"
+  },
+  {
+    "win": "LN",
+    "lose": "IS"
+  },
+  {
+    "win": "LN",
+    "lose": "AG"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "AN",
+    "lose": "GL"
+  },
+  {
+    "win": "AG",
+    "lose": "NS"
+  },
+  {
+    "win": "GL",
+    "lose": "AS"
+  },
+  {
+    "win": "GS",
+    "lose": "LN"
+  },
+  {
+    "win": "AL",
+    "lose": "GN"
+  },
+  {
+    "win": "AN",
+    "lose": "LS"
+  },
+  {
+    "win": "NS",
+    "lose": "AG"
+  },
+  {
+    "win": "AS",
+    "lose": "GL"
+  },
+  {
+    "win": "GL",
+    "lose": "NS"
+  },
+  {
+    "win": "LN",
+    "lose": "AG"
+  },
+  {
+    "win": "LN",
+    "lose": "AS"
+  },
+  {
+    "win": "AS",
+    "lose": "GL"
+  },
+  {
+    "win": "AL",
+    "lose": "GS"
+  },
+  {
+    "win": "AG",
+    "lose": "LS"
+  },
+  {
+    "win": "GL",
+    "lose": "AS"
+  },
+  {
+    "win": "AL",
+    "lose": "GS"
+  },
+  {
+    "win": "AG",
+    "lose": "LS"
+  },
+  {
+    "win": "AS",
+    "lose": "GL"
+  },
+  {
+    "win": "AL",
+    "lose": "GS"
+  },
+  {
+    "win": "AG",
+    "lose": "LS"
+  },
+  {
+    "win": "GS",
+    "lose": "IL"
+  },
+  {
+    "win": "LS",
+    "lose": "GI"
+  },
+  {
+    "win": "IS",
+    "lose": "GL"
+  },
+  {
+    "win": "GS",
+    "lose": "IL"
+  },
+  {
+    "win": "LS",
+    "lose": "GI"
+  },
+  {
+    "win": "GL",
+    "lose": "IS"
+  },
+  {
+    "win": "IL",
+    "lose": "GS"
+  },
+  {
+    "win": "LS",
+    "lose": "GI"
+  },
+  {
+    "win": "LN",
+    "lose": "GI"
+  }
+]

@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const matches = await loadMatches('./src/data/matches.json')
+        const matches = await loadMatches('/matches.json')
         const data = createEngine(matches)
         setEngineData(data)
         setLoading(false)
