@@ -1,994 +1,994 @@
 [
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AN",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "IL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AN",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "LS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AI",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "LS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AG",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "GL",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "GI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AS",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "IL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AI",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "LN",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "LS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "NS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "LS",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "GL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "IL",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "IN",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "IL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "IL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AN",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "IN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "IN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AS",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "IL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AI",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AI",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "GL",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "NS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "IN",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "IN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AS",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "GN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "IL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "IN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "IN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "NS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "IL",
-    "loose": "AN"
+    "lose": "AN"
   },
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "IL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AI",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "GN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "LN",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "LN",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "AN",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "GL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AI",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "IL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "IN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "IL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "LS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "GN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "IN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AN",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "AG",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "GN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "GS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AI",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AL",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "GN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AS",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "LN",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "GN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "GL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AI",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "NS",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "GL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "AG",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "AS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "IN",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "IL",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "AN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "LS",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AI",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AG",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "NS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "AL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "IN",
-    "loose": "AL"
+    "lose": "AL"
   },
   {
     "win": "AN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "GL",
-    "loose": "AI"
+    "lose": "AI"
   },
   {
     "win": "GN",
-    "loose": "AL"
+    "lose": "AL"
   },
   {
     "win": "LN",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "IN",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "AI",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "AS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "AG",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "GN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "IS",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AS",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "AI",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AG",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "IN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "GN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "GL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "GN",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "GL",
-    "loose": "IN"
+    "lose": "IN"
   },
   {
     "win": "LN",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "IL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "IN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "NS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LN",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "LN",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AN",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AG",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "GL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "GS",
-    "loose": "LN"
+    "lose": "LN"
   },
   {
     "win": "AL",
-    "loose": "GN"
+    "lose": "GN"
   },
   {
     "win": "AN",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "NS",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "AS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "GL",
-    "loose": "NS"
+    "lose": "NS"
   },
   {
     "win": "LN",
-    "loose": "AG"
+    "lose": "AG"
   },
   {
     "win": "LN",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AL",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "AG",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "GL",
-    "loose": "AS"
+    "lose": "AS"
   },
   {
     "win": "AL",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "AG",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "AS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "AL",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "AG",
-    "loose": "LS"
+    "lose": "LS"
   },
   {
     "win": "GS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "IS",
-    "loose": "GL"
+    "lose": "GL"
   },
   {
     "win": "GS",
-    "loose": "IL"
+    "lose": "IL"
   },
   {
     "win": "LS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "GL",
-    "loose": "IS"
+    "lose": "IS"
   },
   {
     "win": "IL",
-    "loose": "GS"
+    "lose": "GS"
   },
   {
     "win": "LS",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "IN",
-    "loose": "EG"
+    "lose": "EG"
   },
   {
     "win": "IL",
-    "loose": "EN"
+    "lose": "EN"
   },
   {
     "win": "GL",
-    "loose": "EI"
+    "lose": "EI"
   },
   {
     "win": "GN",
-    "loose": "EL"
+    "lose": "EL"
   },
   {
     "win": "LN",
-    "loose": "GI"
+    "lose": "GI"
   },
   {
     "win": "GN",
-    "loose": "EI"
+    "lose": "EI"
   },
   {
     "win": "GI",
-    "loose": "EL"
+    "lose": "EL"
   }
 ]

@@ -2,12 +2,13 @@ import type { Match, PlayerName } from "../engine/types.js";
 
 
 const names_map: { [key: string]: PlayerName } = {
-  A: "Axel",
-  L: "Lesha",
-  I: "August",
-  N: "Neel",
-  S: "Simon",
-  G: "Guarov"
+  a: "Axel",
+  l: "Lesha",
+  i: "August",
+  n: "Neel",
+  s: "Simon",
+  g: "Guarov",
+  e: "UnknownE",
 }
 
 const str_to_player: (player_str: string) => PlayerName = (player_str: string) => {
@@ -16,8 +17,10 @@ const str_to_player: (player_str: string) => PlayerName = (player_str: string) =
         throw new Error(`Invalid player name: ${player_str}`);
     }
 
-    const player_name = names_map[player_str.toUpperCase()];
+    const player_name = names_map[player_str];
     if (!player_name) {
+        console.log(player_str)
+        console.log(names_map[player_str])
         throw new Error(`Unknown player: ${player_str}`);
     }
     return player_name;
