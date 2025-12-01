@@ -42,7 +42,6 @@ export function MatchTable({ matches }: MatchTableProps) {
               <th className="p-3 text-left font-semibold">Losing Team</th>
               <th className="p-3 text-left font-semibold">Team ELO</th>
               <th className="p-3 text-left font-semibold">Win Probability</th>
-              <th className="p-3 text-left font-semibold">ELO Change</th>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +49,7 @@ export function MatchTable({ matches }: MatchTableProps) {
               const matchNumber = matches.length - (startIdx + idx)
               const winningTeamElo = getCombinedTeamElo(analysis.winTeam, analysis)
               const losingTeamElo = getCombinedTeamElo(analysis.loseTeam, analysis)
+              const eloChange = Math.round(analysis.eloChange)
 
               return (
                 <tr key={startIdx + idx} className="border-b border-gray-200 hover:bg-gray-50">
@@ -57,9 +57,11 @@ export function MatchTable({ matches }: MatchTableProps) {
                   <td className="p-3">
                     <div className="flex flex-col gap-2">
                       {Array.from(analysis.winTeam).map((player) => (
-                        <div key={player} className="flex justify-between items-center bg-green-100 px-2 py-1 rounded">
+                        <div key={player} className="px-2 py-1">
                           <span className="font-medium">{player}</span>
-                          <span className="text-xs text-gray-600 ml-2">{Math.round(getPlayerElo(player, analysis))}</span>
+                          <span className="text-gray-600"> ({Math.round(getPlayerElo(player, analysis))}</span>
+                          <span className="text-green-600 font-semibold">+{eloChange}</span>
+                          <span className="text-gray-600">)</span>
                         </div>
                       ))}
                     </div>
@@ -68,20 +70,17 @@ export function MatchTable({ matches }: MatchTableProps) {
                   <td className="p-3">
                     <div className="flex flex-col gap-2">
                       {Array.from(analysis.loseTeam).map((player) => (
-                        <div key={player} className="flex justify-between items-center bg-red-100 px-2 py-1 rounded">
+                        <div key={player} className="px-2 py-1">
                           <span className="font-medium">{player}</span>
-                          <span className="text-xs text-gray-600 ml-2">{Math.round(getPlayerElo(player, analysis))}</span>
+                          <span className="text-gray-600"> ({Math.round(getPlayerElo(player, analysis))}</span>
+                          <span className="text-red-600 font-semibold">-{eloChange}</span>
+                          <span className="text-gray-600">)</span>
                         </div>
                       ))}
                     </div>
                   </td>
                   <td className="p-3 font-semibold text-lg text-red-600">{Math.round(losingTeamElo)}</td>
                   <td className="p-3">{formatPercent(analysis.expectedWinProbability)}</td>
-                  <td className="p-3">
-                    <span className="font-semibold text-green-600">+{Math.round(analysis.eloChange)}</span>
-                    {' / '}
-                    <span className="font-semibold text-red-600">-{Math.round(analysis.eloChange)}</span>
-                  </td>
                 </tr>
               )
             })}
