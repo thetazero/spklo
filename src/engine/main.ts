@@ -1,3 +1,4 @@
+import { studentTCdf } from "./student_t_cdf.ts";
 import type { Match, PlayerName } from "./types.ts";
 
 export interface MatchAnalysis {
@@ -78,6 +79,17 @@ export class Engine {
         return totalElo;
     }
 
+    computeWinProbability(winnerElo: number, loserElo: number): number {
+        // return 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
+        const delta = winnerElo - loserElo;
+        const scale = 100; // analogous to 400 in standard Elo, but matched to t-dist
+        return studentTCdf(delta / scale, 3);
+    }
+
+    computeEloChange(expectedWinProbability: number, kFactor: number): number {
+        return kFactor * (1 - expectedWinProbability);
+    }
+
     analyzeMatch(match: Match): MatchAnalysis {
         // Assert exactly 2 players per team
         if (match.winner.size !== 2 || match.loser.size !== 2) {
@@ -93,10 +105,10 @@ export class Engine {
         const loserElo = this.getCombinedEloWithPairwise(match.loser);
 
         // Calculate expected scores
-        const expectedWinProbability = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
+        const expectedWinProbability = this.computeWinProbability(winnerElo, loserElo);
 
         // Calculate ELO change (actual - expected)
-        const eloChange = averageK * (1 - expectedWinProbability);
+        const eloChange = this.computeEloChange(expectedWinProbability, averageK);
 
         // Update BCE loss: -log(p) where p is the predicted probability of the actual outcome
         this.bceLoss += -Math.log(expectedWinProbability);
@@ -166,9 +178,9 @@ export interface EngineAndMatches {
 
 export function createEngine(
     matches: Match[],
-    highK: number = 128,
-    normalK: number = 16,
-    highKMatchCount: number = 10,
+    highK: number = 64,
+    normalK: number = 5,
+    highKMatchCount: number = 4,
     pairwiseFactor: number = 0.2,
 ): EngineAndMatches {
     const engine = new Engine(highK, normalK, highKMatchCount, pairwiseFactor);
