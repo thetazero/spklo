@@ -1,4 +1,5 @@
 import type { Engine } from '../engine/main'
+import { TeamEloDisplay } from './TeamEloDisplay'
 
 interface PairRankingsProps {
   engine: Engine
@@ -49,21 +50,14 @@ export function PairRankings({ engine }: PairRankingsProps) {
             <tr key={`${pair.player1}:${pair.player2}`} className="border-b border-gray-200">
               <td className="p-2">{index + 1}</td>
               <td className="p-2">
-                <div className="text-sm">
-                  <span className="font-bold text-lg">{pair.combinedElo}</span>
-                  <span className="text-gray-600"> = </span>
-                  <span className="font-medium">{pair.player1}</span>
-                  <span className="text-gray-600"> ({pair.player1Elo}) + </span>
-                  <span className="font-medium">{pair.player2}</span>
-                  <span className="text-gray-600"> ({pair.player2Elo}) + </span>
-                  <span className={`font-semibold ${
-                    pair.adjustment > 0 ? 'text-green-600' :
-                    pair.adjustment < 0 ? 'text-red-600' :
-                    'text-gray-600'
-                  }`}>
-                    {Math.round(pair.adjustment)}
-                  </span>
-                </div>
+                <TeamEloDisplay
+                  players={[
+                    { name: pair.player1, elo: pair.player1Elo },
+                    { name: pair.player2, elo: pair.player2Elo }
+                  ]}
+                  pairwiseAdjustment={pair.adjustment}
+                  showTotal={true}
+                />
               </td>
               <td className="p-2">
                 <span className={`font-semibold ${

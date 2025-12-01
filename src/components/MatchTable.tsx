@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { MatchAnalysis } from '../engine/main'
 import type { PlayerName } from '../engine/types'
+import { TeamEloDisplay } from './TeamEloDisplay'
 
 interface MatchTableProps {
   matches: MatchAnalysis[]
@@ -62,34 +63,26 @@ export function MatchTable({ matches }: MatchTableProps) {
                 <tr key={startIdx + idx} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="p-3">{matchNumber}</td>
                   <td className="p-3">
-                    <div className="text-sm">
-                      <span className="font-medium">{winner1}</span>
-                      <span className="text-gray-600"> ({Math.round(getPlayerElo(winner1, analysis))}</span>
-                      <span className="text-green-600 font-semibold"> +{eloChange}</span>
-                      <span className="text-gray-600">) + </span>
-                      <span className="font-medium">{winner2}</span>
-                      <span className="text-gray-600"> ({Math.round(getPlayerElo(winner2, analysis))}</span>
-                      <span className="text-green-600 font-semibold"> +{eloChange}</span>
-                      <span className="text-gray-600">) + (</span>
-                      <span className="text-blue-600 font-semibold">{winnerPairwiseBefore.toFixed(1)}</span>
-                      <span className="text-green-600 font-semibold"> +{pairwiseDelta}</span>
-                      <span className="text-gray-600">)</span>
-                    </div>
+                    <TeamEloDisplay
+                      players={[
+                        { name: winner1, elo: getPlayerElo(winner1, analysis), eloDelta: eloChange },
+                        { name: winner2, elo: getPlayerElo(winner2, analysis), eloDelta: eloChange }
+                      ]}
+                      pairwiseAdjustment={winnerPairwiseBefore}
+                      pairwiseDelta={parseFloat(pairwiseDelta)}
+                      showTotal={true}
+                    />
                   </td>
                   <td className="p-3">
-                    <div className="text-sm">
-                      <span className="font-medium">{loser1}</span>
-                      <span className="text-gray-600"> ({Math.round(getPlayerElo(loser1, analysis))}</span>
-                      <span className="text-red-600 font-semibold"> -{eloChange}</span>
-                      <span className="text-gray-600">) + </span>
-                      <span className="font-medium">{loser2}</span>
-                      <span className="text-gray-600"> ({Math.round(getPlayerElo(loser2, analysis))}</span>
-                      <span className="text-red-600 font-semibold"> -{eloChange}</span>
-                      <span className="text-gray-600">) + (</span>
-                      <span className="text-blue-600 font-semibold">{loserPairwiseBefore.toFixed(1)}</span>
-                      <span className="text-red-600 font-semibold"> -{pairwiseDelta}</span>
-                      <span className="text-gray-600">)</span>
-                    </div>
+                    <TeamEloDisplay
+                      players={[
+                        { name: loser1, elo: getPlayerElo(loser1, analysis), eloDelta: -eloChange },
+                        { name: loser2, elo: getPlayerElo(loser2, analysis), eloDelta: -eloChange }
+                      ]}
+                      pairwiseAdjustment={loserPairwiseBefore}
+                      pairwiseDelta={-parseFloat(pairwiseDelta)}
+                      showTotal={true}
+                    />
                   </td>
                   <td className="p-3">{formatPercent(analysis.expectedWinProbability)}</td>
                 </tr>
