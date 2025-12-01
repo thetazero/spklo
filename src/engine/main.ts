@@ -167,9 +167,9 @@ export interface EngineAndMatches {
 export function createEngine(
     matches: Match[],
     highK: number = 128,
-    normalK: number = 16,
-    highKMatchCount: number = 10,
-    pairwiseFactor: number = 0.2,
+    normalK: number = 4,
+    highKMatchCount: number = 4,
+    pairwiseFactor: number = 1.0,
 ): EngineAndMatches {
     const engine = new Engine(highK, normalK, highKMatchCount, pairwiseFactor);
     const analyzed_matches: MatchAnalysis[] = [];
