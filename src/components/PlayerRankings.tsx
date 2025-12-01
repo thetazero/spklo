@@ -18,17 +18,17 @@ export function PlayerRankings({ engine }: PlayerRankingsProps) {
       const matchCount = engine.getMatchCount(player)
       return [
         // Player column
-        { simple: player, rendered: <span className="font-medium">{player}</span> },
+        { simple: player, rendered: <span className="font-medium text-gray-100">{player}</span> },
         // ELO column
-        { simple: elo, rendered: <span className="font-semibold">{Math.round(elo)}</span> },
+        { simple: elo, rendered: <span className="font-semibold text-gray-100">{Math.round(elo)}</span> },
         // Matches column
-        { simple: matchCount, rendered: <span className="text-gray-600">{matchCount}</span> },
+        { simple: matchCount, rendered: <span className="text-gray-400">{matchCount}</span> },
       ]
     })
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Player Rankings</h2>
+    <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Player Rankings</h2>
       <Table columns={columns} rows={rows} />
     </div>
   )

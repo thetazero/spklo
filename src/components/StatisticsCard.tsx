@@ -5,9 +5,9 @@ interface StatisticItemProps {
 
 function StatisticItem({ label, value }: StatisticItemProps) {
   return (
-    <div className="p-4 bg-gray-50 rounded">
-      <div className="text-sm text-gray-600">{label}</div>
-      <div className="text-2xl font-bold">{value}</div>
+    <div className="p-4 bg-gray-700 rounded">
+      <div className="text-sm text-gray-400">{label}</div>
+      <div className="text-2xl font-bold text-gray-100">{value}</div>
     </div>
   )
 }
@@ -22,8 +22,8 @@ export function StatisticsCard({ totalMatches, bceLoss }: StatisticsCardProps) {
   const impliedWinProbability = totalMatches > 0 ? Math.exp(-averageBceLoss) : 0
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Statistics</h2>
+    <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Statistics</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatisticItem label="Total Matches" value={totalMatches} />
         <StatisticItem label="Total BCE Loss" value={bceLoss.toFixed(2)} />

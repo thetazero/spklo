@@ -36,7 +36,7 @@ export function MatchTable({ matches }: MatchTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="bg-slate-700 text-white">
+            <tr className="bg-gray-700 text-gray-100">
               <th className="p-3 text-left font-semibold">Match #</th>
               <th className="p-3 text-left font-semibold">Winning Team</th>
               <th className="p-3 text-left font-semibold">Losing Team</th>
@@ -60,8 +60,8 @@ export function MatchTable({ matches }: MatchTableProps) {
               const loserPairwiseBefore = analysis.beforePairwise.get(loserKey) || 0
 
               return (
-                <tr key={startIdx + idx} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="p-3">{matchNumber}</td>
+                <tr key={startIdx + idx} className="border-b border-gray-700 hover:bg-gray-800">
+                  <td className="p-3 text-gray-100">{matchNumber}</td>
                   <td className="p-3">
                     <TeamEloDisplay
                       players={[
@@ -84,7 +84,7 @@ export function MatchTable({ matches }: MatchTableProps) {
                       showTotal={true}
                     />
                   </td>
-                  <td className="p-3">{formatPercent(analysis.expectedWinProbability)}</td>
+                  <td className="p-3 text-gray-100">{formatPercent(analysis.expectedWinProbability)}</td>
                 </tr>
               )
             })}
@@ -96,17 +96,17 @@ export function MatchTable({ matches }: MatchTableProps) {
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 0}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-400">
           Page {currentPage + 1} of {totalPages} ({reversedMatches.length} matches)
         </span>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage >= totalPages - 1}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Next
         </button>

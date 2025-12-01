@@ -26,13 +26,14 @@ function App() {
     loadData()
   }, [])
 
-  if (loading) return <div className="p-8">Loading matches...</div>
-  if (error) return <div className="p-8 text-red-600">Error: {error}</div>
-  if (!engineData) return <div className="p-8">No data</div>
+  if (loading) return <div className="min-h-screen bg-gray-900 text-gray-100 p-8">Loading matches...</div>
+  if (error) return <div className="min-h-screen bg-gray-900 text-red-400 p-8">Error: {error}</div>
+  if (!engineData) return <div className="min-h-screen bg-gray-900 text-gray-100 p-8">No data</div>
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Spike ELO Rankings</h1>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8 text-center text-gray-100">Spike ELO Rankings</h1>
 
       <PlayerRankings engine={engineData.engine} />
 
@@ -43,9 +44,10 @@ function App() {
         bceLoss={engineData.engine.bceLoss}
       />
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-semibold mb-4">Match History</h2>
-        <MatchTable matches={engineData.analyzedMatches} />
+        <div className="bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-100">Match History</h2>
+          <MatchTable matches={engineData.analyzedMatches} />
+        </div>
       </div>
     </div>
   )

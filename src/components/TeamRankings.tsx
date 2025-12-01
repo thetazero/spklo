@@ -41,9 +41,9 @@ export function TeamRankings({ engine }: TeamRankingsProps) {
           simple: value,
           rendered: (
             <span className={`font-semibold ${
-              value > 0 ? 'text-green-600' :
-              value < 0 ? 'text-red-600' :
-              'text-gray-600'
+              value > 0 ? 'text-green-400' :
+              value < 0 ? 'text-red-400' :
+              'text-gray-400'
             }`}>
               {value > 0 ? '+' : ''}{value.toFixed(1)}
             </span>
@@ -52,7 +52,7 @@ export function TeamRankings({ engine }: TeamRankingsProps) {
         // Matches column
         {
           simple: matchCount,
-          rendered: <span className="text-gray-600">{matchCount}</span>
+          rendered: <span className="text-gray-400">{matchCount}</span>
         },
       ]
     })
@@ -62,9 +62,9 @@ export function TeamRankings({ engine }: TeamRankingsProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Team Rankings</h2>
-      <p className="text-sm text-gray-600 mb-4">
+    <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Team Rankings</h2>
+      <p className="text-sm text-gray-400 mb-4">
         Team chemistry ratings - how well player pairs perform together
       </p>
       <Table columns={columns} rows={rows} />

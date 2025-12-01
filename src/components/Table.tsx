@@ -53,17 +53,17 @@ export function Table({ columns, rows }: TableProps) {
   return (
     <table className="w-full">
       <thead>
-        <tr className="border-b-2 border-gray-300">
+        <tr className="border-b-2 border-gray-700">
           {columns.map((column, index) => (
             <th
               key={index}
-              className="p-2 text-left cursor-pointer hover:bg-gray-100"
+              className="p-2 text-left cursor-pointer hover:bg-gray-800 text-gray-100"
               onClick={() => handleSort(index)}
             >
               <div className="flex items-center gap-1">
                 <span>{column.header}</span>
                 {sortColumn === index && (
-                  <span className="text-xs">
+                  <span className="text-xs text-gray-300">
                     {sortDirection === 'asc' ? '▲' : '▼'}
                   </span>
                 )}
@@ -74,7 +74,7 @@ export function Table({ columns, rows }: TableProps) {
       </thead>
       <tbody>
         {sortedRows.map((row, rowIndex) => (
-          <tr key={rowIndex} className="border-b border-gray-200">
+          <tr key={rowIndex} className="border-b border-gray-700 hover:bg-gray-800">
             {row.map((cell, cellIndex) => (
               <td key={cellIndex} className="p-2">
                 {cell.rendered}
