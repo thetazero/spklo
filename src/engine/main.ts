@@ -39,7 +39,7 @@ export class Engine {
     }
 
     getElo(player: PlayerName): number {
-        return this.elos[player] || 1000;
+        return this.elos[player] || 500;
     }
 
     getMatchCount(player: PlayerName): number {
