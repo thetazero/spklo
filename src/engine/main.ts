@@ -15,6 +15,7 @@ export class Engine {
     bceLoss: number;
     matchCounts: { [key in PlayerName]: number };
     pairwiseAdjustments: Map<string, number>;
+    pairMatchCounts: Map<string, number>;
     highK: number;
     normalK: number;
     highKMatchCount: number;
@@ -30,6 +31,7 @@ export class Engine {
         this.bceLoss = 0;
         this.matchCounts = {};
         this.pairwiseAdjustments = new Map();
+        this.pairMatchCounts = new Map();
         this.highK = highK;
         this.normalK = normalK;
         this.highKMatchCount = highKMatchCount;
@@ -54,6 +56,10 @@ export class Engine {
 
     getPairwiseAdjustment(player1: PlayerName, player2: PlayerName): number {
         return this.pairwiseAdjustments.get(this.getPairwiseKey(player1, player2)) || 0;
+    }
+
+    getPairMatchCount(player1: PlayerName, player2: PlayerName): number {
+        return this.pairMatchCounts.get(this.getPairwiseKey(player1, player2)) || 0;
     }
 
     getCombinedElo(players: Set<PlayerName>): number {
@@ -125,18 +131,21 @@ export class Engine {
             this.matchCounts[player] = this.getMatchCount(player) + 1;
         }
 
-        // Update pairwise adjustments for teammate pairs
+        // Update pairwise adjustments and match counts for teammate pairs
         // Since we have exactly 2 players per team, there's only one pair per team
         const pairwiseDelta = eloChange * this.pairwiseFactor;
-        if (this.pairwiseFactor > 0) {
-            // Update winning team pair
-            const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
-            this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + pairwiseDelta);
 
-            // Update losing team pair
-            const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
-            this.pairwiseAdjustments.set(loserKey, loserCurrentAdj - pairwiseDelta);
-        }
+        // Update winning team pair
+        const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
+        const winnerPairCount = this.getPairMatchCount(winner1, winner2);
+        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + pairwiseDelta);
+        this.pairMatchCounts.set(winnerKey, winnerPairCount + 1);
+
+        // Update losing team pair
+        const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
+        const loserPairCount = this.getPairMatchCount(loser1, loser2);
+        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj - pairwiseDelta);
+        this.pairMatchCounts.set(loserKey, loserPairCount + 1);
 
         return {
             eloChange,

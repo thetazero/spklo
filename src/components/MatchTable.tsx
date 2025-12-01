@@ -22,10 +22,6 @@ export function MatchTable({ matches }: MatchTableProps) {
     return analysis.beforeElos[player] || 1000
   }
 
-  const getCombinedTeamElo = (team: Set<PlayerName>, analysis: MatchAnalysis): number => {
-    return Array.from(team).reduce((sum, player) => sum + getPlayerElo(player, analysis), 0)
-  }
-
   const formatPercent = (value: number): string => {
     return `${(value * 100).toFixed(1)}%`
   }
