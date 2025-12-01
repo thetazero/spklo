@@ -964,31 +964,7 @@
     "lose": "GI"
   },
   {
-    "win": "IN",
-    "lose": "EG"
-  },
-  {
-    "win": "IL",
-    "lose": "EN"
-  },
-  {
-    "win": "GL",
-    "lose": "EI"
-  },
-  {
-    "win": "GN",
-    "lose": "EL"
-  },
-  {
     "win": "LN",
     "lose": "GI"
-  },
-  {
-    "win": "GN",
-    "lose": "EI"
-  },
-  {
-    "win": "GI",
-    "lose": "EL"
   }
 ]

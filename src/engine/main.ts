@@ -39,6 +39,9 @@ export class Engine {
         for (const player of match.winner) {
             beforeElos[player] = this.getElo(player);
         }
+        for (const player of match.loser) {
+            beforeElos[player] = this.getElo(player);
+        }
 
         // Update each player's ELO
         for (const player of match.winner) {

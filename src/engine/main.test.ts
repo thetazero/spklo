@@ -75,14 +75,12 @@ describe('createEngine', () => {
     expect(analysis.eloChange).toBeCloseTo(16, 0)
     expect(analysis.expectedWinProbability).toBeCloseTo(0.5, 2)
 
-    // Verify beforeElos contains the correct players with starting ELO
+    // Verify beforeElos contains all players with starting ELO
     expect(analysis.beforeElos).toBeDefined()
     expect(analysis.beforeElos['Alice']).toBe(1000)
     expect(analysis.beforeElos['Bob']).toBe(1000)
-
-    // beforeElos should only contain winning team players
-    expect(analysis.beforeElos['Charlie']).toBeUndefined()
-    expect(analysis.beforeElos['Diana']).toBeUndefined()
+    expect(analysis.beforeElos['Charlie']).toBe(1000)
+    expect(analysis.beforeElos['Diana']).toBe(1000)
 
     // Verify final ELOs are updated correctly
     expect(result.engine.getElo('Alice')).toBeCloseTo(1016, 0)
