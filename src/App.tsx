@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
+import { HashRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
 import { loadMatches } from './data/load'
 import { createEngine, type EngineAndMatches } from './engine/main'
-import { MatchTable } from './components/MatchTable'
-import { StatisticsCard } from './components/StatisticsCard'
-import { PlayerRankings } from './components/PlayerRankings'
-import { TeamRankings } from './components/TeamRankings'
+import { TeamsPage } from './pages/Teams'
+import { MatchesPage } from './pages/Matches'
+import { PlayersPage } from './pages/Players'
+import { StatsPage } from './pages/Stats'
 
 function App() {
   const [engineData, setEngineData] = useState<EngineAndMatches | null>(null)
@@ -14,7 +15,7 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const matches = await loadMatches('/src/data/matches.json')
+        const matches = await loadMatches('./src/data/matches.json')
         const data = createEngine(matches)
         setEngineData(data)
         setLoading(false)
@@ -31,25 +32,46 @@ function App() {
   if (!engineData) return <div className="min-h-screen bg-gray-900 text-gray-100 p-8">No data</div>
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-100">Spike ELO Rankings</h1>
+    <HashRouter>
+      <div className="min-h-screen bg-gray-900 text-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold mb-8 text-center text-gray-100">Spike ELO Rankings</h1>
 
-      <PlayerRankings engine={engineData.engine} />
+          <nav className="mb-8">
+            <ul className="flex gap-4 justify-center">
+              <li>
+                <Link to="teams" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                  Teams
+                </Link>
+              </li>
+              <li>
+                <Link to="players" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                  Players
+                </Link>
+              </li>
+              <li>
+                <Link to="matches" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                  Matches
+                </Link>
+              </li>
+              <li>
+                <Link to="stats" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                  Stats
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
-      <TeamRankings engine={engineData.engine} />
-
-      <StatisticsCard
-        totalMatches={engineData.analyzedMatches.length}
-        bceLoss={engineData.engine.bceLoss}
-      />
-
-        <div className="bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-100">Match History</h2>
-          <MatchTable matches={engineData.analyzedMatches} />
+          <Routes>
+            <Route path="" element={<Navigate to="teams" replace />} />
+            <Route path="players" element={<PlayersPage engine={engineData.engine} />} />
+            <Route path="teams" element={<TeamsPage engine={engineData.engine} />} />
+            <Route path="matches" element={<MatchesPage matches={engineData.analyzedMatches} />} />
+            <Route path="stats" element={<StatsPage totalMatches={engineData.analyzedMatches.length} bceLoss={engineData.engine.bceLoss} />} />
+          </Routes>
         </div>
       </div>
-    </div>
+    </HashRouter>
   )
 }
 
