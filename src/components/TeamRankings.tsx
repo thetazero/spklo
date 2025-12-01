@@ -63,10 +63,6 @@ export function TeamRankings({ engine }: TeamRankingsProps) {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Team Rankings</h2>
-      <p className="text-sm text-gray-400 mb-4">
-        Team chemistry ratings - how well player pairs perform together
-      </p>
       <Table columns={columns} rows={rows} />
     </div>
   )

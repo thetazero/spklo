@@ -23,7 +23,6 @@ export function StatisticsCard({ totalMatches, bceLoss }: StatisticsCardProps) {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Statistics</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatisticItem label="Total Matches" value={totalMatches} />
         <StatisticItem label="Total BCE Loss" value={bceLoss.toFixed(2)} />

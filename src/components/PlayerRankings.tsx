@@ -28,7 +28,6 @@ export function PlayerRankings({ engine }: PlayerRankingsProps) {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Player Rankings</h2>
       <Table columns={columns} rows={rows} />
     </div>
   )
