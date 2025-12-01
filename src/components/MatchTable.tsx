@@ -30,6 +30,10 @@ export function MatchTable({ matches }: MatchTableProps) {
     return `${(value * 100).toFixed(1)}%`
   }
 
+  const getPairwiseKey = (player1: PlayerName, player2: PlayerName): string => {
+    return player1 < player2 ? `${player1}:${player2}` : `${player2}:${player1}`
+  }
+
   return (
     <div className="w-full my-8">
       <div className="overflow-x-auto">
@@ -38,48 +42,59 @@ export function MatchTable({ matches }: MatchTableProps) {
             <tr className="bg-slate-700 text-white">
               <th className="p-3 text-left font-semibold">Match #</th>
               <th className="p-3 text-left font-semibold">Winning Team</th>
-              <th className="p-3 text-left font-semibold">Team ELO</th>
               <th className="p-3 text-left font-semibold">Losing Team</th>
-              <th className="p-3 text-left font-semibold">Team ELO</th>
               <th className="p-3 text-left font-semibold">Win Probability</th>
             </tr>
           </thead>
           <tbody>
             {currentMatches.map((analysis, idx) => {
               const matchNumber = matches.length - (startIdx + idx)
-              const winningTeamElo = getCombinedTeamElo(analysis.winTeam, analysis)
-              const losingTeamElo = getCombinedTeamElo(analysis.loseTeam, analysis)
               const eloChange = Math.round(analysis.eloChange)
+              const pairwiseDelta = analysis.pairwiseDelta.toFixed(1)
+
+              // Get winners and their pairwise info
+              const [winner1, winner2] = Array.from(analysis.winTeam)
+              const winnerKey = getPairwiseKey(winner1, winner2)
+              const winnerPairwiseBefore = analysis.beforePairwise.get(winnerKey) || 0
+
+              // Get losers and their pairwise info
+              const [loser1, loser2] = Array.from(analysis.loseTeam)
+              const loserKey = getPairwiseKey(loser1, loser2)
+              const loserPairwiseBefore = analysis.beforePairwise.get(loserKey) || 0
 
               return (
                 <tr key={startIdx + idx} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="p-3">{matchNumber}</td>
                   <td className="p-3">
-                    <div className="flex flex-col gap-2">
-                      {Array.from(analysis.winTeam).map((player) => (
-                        <div key={player} className="px-2 py-1">
-                          <span className="font-medium">{player}</span>
-                          <span className="text-gray-600"> ({Math.round(getPlayerElo(player, analysis))}</span>
-                          <span className="text-green-600 font-semibold">+{eloChange}</span>
-                          <span className="text-gray-600">)</span>
-                        </div>
-                      ))}
+                    <div className="text-sm">
+                      <span className="font-medium">{winner1}</span>
+                      <span className="text-gray-600"> ({Math.round(getPlayerElo(winner1, analysis))}</span>
+                      <span className="text-green-600 font-semibold"> +{eloChange}</span>
+                      <span className="text-gray-600">) + </span>
+                      <span className="font-medium">{winner2}</span>
+                      <span className="text-gray-600"> ({Math.round(getPlayerElo(winner2, analysis))}</span>
+                      <span className="text-green-600 font-semibold"> +{eloChange}</span>
+                      <span className="text-gray-600">) + (</span>
+                      <span className="text-blue-600 font-semibold">{winnerPairwiseBefore.toFixed(1)}</span>
+                      <span className="text-green-600 font-semibold"> +{pairwiseDelta}</span>
+                      <span className="text-gray-600">)</span>
                     </div>
                   </td>
-                  <td className="p-3 font-semibold text-lg text-green-600">{Math.round(winningTeamElo)}</td>
                   <td className="p-3">
-                    <div className="flex flex-col gap-2">
-                      {Array.from(analysis.loseTeam).map((player) => (
-                        <div key={player} className="px-2 py-1">
-                          <span className="font-medium">{player}</span>
-                          <span className="text-gray-600"> ({Math.round(getPlayerElo(player, analysis))}</span>
-                          <span className="text-red-600 font-semibold">-{eloChange}</span>
-                          <span className="text-gray-600">)</span>
-                        </div>
-                      ))}
+                    <div className="text-sm">
+                      <span className="font-medium">{loser1}</span>
+                      <span className="text-gray-600"> ({Math.round(getPlayerElo(loser1, analysis))}</span>
+                      <span className="text-red-600 font-semibold"> -{eloChange}</span>
+                      <span className="text-gray-600">) + </span>
+                      <span className="font-medium">{loser2}</span>
+                      <span className="text-gray-600"> ({Math.round(getPlayerElo(loser2, analysis))}</span>
+                      <span className="text-red-600 font-semibold"> -{eloChange}</span>
+                      <span className="text-gray-600">) + (</span>
+                      <span className="text-blue-600 font-semibold">{loserPairwiseBefore.toFixed(1)}</span>
+                      <span className="text-red-600 font-semibold"> -{pairwiseDelta}</span>
+                      <span className="text-gray-600">)</span>
                     </div>
                   </td>
-                  <td className="p-3 font-semibold text-lg text-red-600">{Math.round(losingTeamElo)}</td>
                   <td className="p-3">{formatPercent(analysis.expectedWinProbability)}</td>
                 </tr>
               )
