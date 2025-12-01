@@ -46,8 +46,6 @@ export function MatchTable({ matches }: MatchTableProps) {
           <tbody>
             {currentMatches.map((analysis, idx) => {
               const matchNumber = matches.length - (startIdx + idx)
-              const eloChange = Math.round(analysis.eloChange)
-              const pairwiseDelta = analysis.pairwiseDelta.toFixed(1)
 
               // Get winners and their pairwise info
               const [winner1, winner2] = Array.from(analysis.winTeam)
@@ -65,22 +63,22 @@ export function MatchTable({ matches }: MatchTableProps) {
                   <td className="p-3">
                     <TeamEloDisplay
                       players={[
-                        { name: winner1, elo: getPlayerElo(winner1, analysis), eloDelta: eloChange },
-                        { name: winner2, elo: getPlayerElo(winner2, analysis), eloDelta: eloChange }
+                        { name: winner1, elo: getPlayerElo(winner1, analysis), eloDelta: analysis.eloChange },
+                        { name: winner2, elo: getPlayerElo(winner2, analysis), eloDelta: analysis.eloChange }
                       ]}
                       pairwiseAdjustment={winnerPairwiseBefore}
-                      pairwiseDelta={parseFloat(pairwiseDelta)}
+                      pairwiseDelta={analysis.pairwiseDelta}
                       showTotal={true}
                     />
                   </td>
                   <td className="p-3">
                     <TeamEloDisplay
                       players={[
-                        { name: loser1, elo: getPlayerElo(loser1, analysis), eloDelta: -eloChange },
-                        { name: loser2, elo: getPlayerElo(loser2, analysis), eloDelta: -eloChange }
+                        { name: loser1, elo: getPlayerElo(loser1, analysis), eloDelta: -analysis.eloChange },
+                        { name: loser2, elo: getPlayerElo(loser2, analysis), eloDelta: -analysis.eloChange }
                       ]}
                       pairwiseAdjustment={loserPairwiseBefore}
-                      pairwiseDelta={-parseFloat(pairwiseDelta)}
+                      pairwiseDelta={-analysis.pairwiseDelta}
                       showTotal={true}
                     />
                   </td>

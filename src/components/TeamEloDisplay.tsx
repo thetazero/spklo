@@ -33,7 +33,7 @@ export function TeamEloDisplay({
           <span className="text-gray-400"> ({Math.round(player.elo)}</span>
           {player.eloDelta !== undefined && (
             <span className={player.eloDelta >= 0 ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'}>
-              {player.eloDelta >= 0 ? '+' : ''}{Math.round(player.eloDelta)}
+              {player.eloDelta >= 0 ? '+' : ''}{player.eloDelta.toFixed(1)}
             </span>
           )}
           <span className="text-gray-400">)</span>
