@@ -1,0 +1,73 @@
+import type { Engine } from '../engine/main'
+import { TeamEloDisplay } from './TeamEloDisplay'
+import { Table } from './Table'
+
+interface TeamRankingsProps {
+  engine: Engine
+}
+
+export function TeamRankings({ engine }: TeamRankingsProps) {
+  const columns = [
+    { header: 'Team ELO', type: 'number' as const },
+    { header: 'Chemistry', type: 'number' as const },
+    { header: 'Matches', type: 'number' as const },
+  ]
+
+  const rows = Array.from(engine.pairwiseAdjustments.entries())
+    .map(([key, value]) => {
+      const [player1, player2] = key.split(':')
+      const matchCount = engine.getPairMatchCount(player1, player2)
+      const player1Elo = engine.getElo(player1)
+      const player2Elo = engine.getElo(player2)
+      const combinedElo = player1Elo + player2Elo + value
+
+      return [
+        // Team ELO column
+        {
+          simple: combinedElo,
+          rendered: (
+            <TeamEloDisplay
+              players={[
+                { name: player1, elo: player1Elo },
+                { name: player2, elo: player2Elo }
+              ]}
+              pairwiseAdjustment={value}
+              showTotal={true}
+            />
+          )
+        },
+        // Chemistry column
+        {
+          simple: value,
+          rendered: (
+            <span className={`font-semibold ${
+              value > 0 ? 'text-green-600' :
+              value < 0 ? 'text-red-600' :
+              'text-gray-600'
+            }`}>
+              {value > 0 ? '+' : ''}{value.toFixed(1)}
+            </span>
+          )
+        },
+        // Matches column
+        {
+          simple: matchCount,
+          rendered: <span className="text-gray-600">{matchCount}</span>
+        },
+      ]
+    })
+
+  if (rows.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 className="text-2xl font-semibold mb-4">Team Rankings</h2>
+      <p className="text-sm text-gray-600 mb-4">
+        Team chemistry ratings - how well player pairs perform together
+      </p>
+      <Table columns={columns} rows={rows} />
+    </div>
+  )
+}

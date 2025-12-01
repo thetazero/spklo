@@ -4,7 +4,7 @@ import { createEngine, type EngineAndMatches } from './engine/main'
 import { MatchTable } from './components/MatchTable'
 import { StatisticsCard } from './components/StatisticsCard'
 import { PlayerRankings } from './components/PlayerRankings'
-import { PairRankings } from './components/PairRankings'
+import { TeamRankings } from './components/TeamRankings'
 
 function App() {
   const [engineData, setEngineData] = useState<EngineAndMatches | null>(null)
@@ -36,7 +36,7 @@ function App() {
 
       <PlayerRankings engine={engineData.engine} />
 
-      <PairRankings engine={engineData.engine} />
+      <TeamRankings engine={engineData.engine} />
 
       <StatisticsCard
         totalMatches={engineData.analyzedMatches.length}
