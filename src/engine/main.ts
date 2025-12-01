@@ -94,8 +94,8 @@ export interface EngineAndMatches {
 
 export function createEngine(
     matches: Match[],
-    highK: number = 64,
-    normalK: number = 32,
+    highK: number = 128,
+    normalK: number = 16,
     highKMatchCount: number = 10
 ): EngineAndMatches {
     const engine = new Engine(highK, normalK, highKMatchCount);
