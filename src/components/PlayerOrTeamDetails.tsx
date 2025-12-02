@@ -5,6 +5,7 @@ import { PlayerCard } from './PlayerCard'
 import { TeamCard } from './TeamCard'
 import { PlayerSelector } from './PlayerSelector'
 import { MatchTable } from './MatchTable'
+import { EloGraph } from './EloGraph'
 
 interface PlayerOrTeamDetailsProps {
   engine: Engine
@@ -37,11 +38,42 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
     )
   }, [selectedPlayers, matches])
 
-  const handlePlayerSelect = (player: PlayerName) => {
-    if (selectedPlayers.includes(player)) {
-      setSelectedPlayers(selectedPlayers.filter(p => p !== player))
-    } else if (selectedPlayers.length < 2) {
-      setSelectedPlayers([...selectedPlayers, player])
+  // Calculate ELO history over time
+  const eloHistory = useMemo(() => {
+    if (selectedPlayers.length === 0 || filteredMatches.length === 0) return []
+
+    if (selectedPlayers.length === 1) {
+      // Single player ELO history
+      const player = selectedPlayers[0]
+      return filteredMatches.map(match => match.beforeElos[player] || 500)
+    }
+
+    // Team ELO history (sum of individual ELOs + pairwise adjustment)
+    const [player1, player2] = selectedPlayers
+    const getPairwiseKey = (p1: PlayerName, p2: PlayerName): string => {
+      return p1 < p2 ? `${p1}:${p2}` : `${p2}:${p1}`
+    }
+    const pairKey = getPairwiseKey(player1, player2)
+
+    return filteredMatches.map(match => {
+      const elo1 = match.beforeElos[player1] || 500
+      const elo2 = match.beforeElos[player2] || 500
+      const pairwise = match.beforePairwise.get(pairKey) || 0
+      return elo1 + elo2 + pairwise
+    })
+  }, [selectedPlayers, filteredMatches])
+
+  const handlePlayerSelect = (player: PlayerName, shiftKey: boolean) => {
+    if (shiftKey) {
+      // Shift+click: select exactly this one player
+      setSelectedPlayers([player])
+    } else {
+      // Normal click: toggle selection (up to 2 players)
+      if (selectedPlayers.includes(player)) {
+        setSelectedPlayers(selectedPlayers.filter(p => p !== player))
+      } else if (selectedPlayers.length < 2) {
+        setSelectedPlayers([...selectedPlayers, player])
+      }
     }
   }
 
@@ -114,6 +146,11 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
           />
         )}
       </div>
+
+      {/* ELO Graph */}
+      {selectedPlayers.length > 0 && eloHistory.length > 0 && (
+        <EloGraph eloHistory={eloHistory} />
+      )}
 
       {/* Match History */}
       {selectedPlayers.length > 0 && filteredMatches.length > 0 && (

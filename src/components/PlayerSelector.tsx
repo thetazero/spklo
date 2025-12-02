@@ -3,7 +3,7 @@ import type { PlayerName } from '../engine/types'
 interface PlayerSelectorProps {
   availablePlayers: PlayerName[]
   selectedPlayers: PlayerName[]
-  onPlayerSelect: (player: PlayerName) => void
+  onPlayerSelect: (player: PlayerName, shiftKey: boolean) => void
   onClear: () => void
   maxPlayers?: number
 }
@@ -28,7 +28,7 @@ export function PlayerSelector({
           return (
             <button
               key={player}
-              onClick={() => onPlayerSelect(player)}
+              onClick={(e) => onPlayerSelect(player, e.shiftKey)}
               disabled={isDisabled}
               className={`
                 px-3 py-2 rounded text-sm font-medium transition-colors
