@@ -1,5 +1,4 @@
 import type { PlayerName } from '../engine/types'
-import { TeamEloDisplay } from './TeamEloDisplay'
 
 interface PlayerInfo {
   name: PlayerName
