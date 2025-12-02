@@ -6,6 +6,7 @@ import { TeamsPage } from './pages/Teams'
 import { MatchesPage } from './pages/Matches'
 import { PlayersPage } from './pages/Players'
 import { StatsPage } from './pages/Stats'
+import { DetailsPage } from './pages/Details'
 
 function App() {
   const [engineData, setEngineData] = useState<EngineAndMatches | null>(null)
@@ -55,6 +56,11 @@ function App() {
                 </Link>
               </li>
               <li>
+                <Link to="details" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                  Details
+                </Link>
+              </li>
+              <li>
                 <Link to="stats" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
                   Stats
                 </Link>
@@ -64,6 +70,7 @@ function App() {
 
           <Routes>
             <Route path="" element={<Navigate to="teams" replace />} />
+            <Route path="details" element={<DetailsPage engine={engineData.engine} matches={engineData.analyzedMatches} />} />
             <Route path="players" element={<PlayersPage engine={engineData.engine} />} />
             <Route path="teams" element={<TeamsPage engine={engineData.engine} />} />
             <Route path="matches" element={<MatchesPage matches={engineData.analyzedMatches} />} />
