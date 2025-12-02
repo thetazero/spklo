@@ -5,11 +5,12 @@ import { TeamEloDisplay } from './TeamEloDisplay'
 
 interface MatchTableProps {
   matches: MatchAnalysis[]
+  selectedPlayers?: PlayerName[]
 }
 
 const MATCHES_PER_PAGE = 20
 
-export function MatchTable({ matches }: MatchTableProps) {
+export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
   const [currentPage, setCurrentPage] = useState(0)
 
   // Reverse order to show newest first
@@ -31,58 +32,86 @@ export function MatchTable({ matches }: MatchTableProps) {
     return player1 < player2 ? `${player1}:${player2}` : `${player2}:${player1}`
   }
 
+  // Check if selected players are in a team
+  const isSelectedTeam = (team: Set<PlayerName>): boolean => {
+    if (selectedPlayers.length === 0) return false
+    if (selectedPlayers.length === 1) {
+      return team.has(selectedPlayers[0])
+    }
+    // Two players selected - check if both are in the team
+    return selectedPlayers.every(p => team.has(p))
+  }
+
+  // Determine column headers
+  const hasSelectedPlayers = selectedPlayers.length > 0
+  const teamAHeader = hasSelectedPlayers ? 'Team A' : 'Winning Team'
+  const teamBHeader = hasSelectedPlayers ? 'Team B' : 'Losing Team'
+
   return (
     <div className="w-full my-8">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="bg-gray-700 text-gray-100">
-              <th className="p-3 text-left font-semibold">Match #</th>
-              <th className="p-3 text-left font-semibold">Winning Team</th>
-              <th className="p-3 text-left font-semibold">Losing Team</th>
+              <th className="p-3 text-left font-semibold">{teamAHeader}</th>
+              <th className="p-3 text-left font-semibold">{teamBHeader}</th>
               <th className="p-3 text-left font-semibold">Win Probability</th>
             </tr>
           </thead>
           <tbody>
             {currentMatches.map((analysis, idx) => {
-              const matchNumber = matches.length - (startIdx + idx)
+              // Determine if we need to swap teams (selected players should be on left)
+              const selectedOnWinSide = isSelectedTeam(analysis.winTeam)
+              const selectedOnLoseSide = isSelectedTeam(analysis.loseTeam)
+              const shouldSwap = hasSelectedPlayers && selectedOnLoseSide && !selectedOnWinSide
 
-              // Get winners and their pairwise info
-              const [winner1, winner2] = Array.from(analysis.winTeam)
-              const winnerKey = getPairwiseKey(winner1, winner2)
-              const winnerPairwiseBefore = analysis.beforePairwise.get(winnerKey) || 0
+              // Team A (left column) and Team B (right column)
+              const teamA = shouldSwap ? analysis.loseTeam : analysis.winTeam
+              const teamB = shouldSwap ? analysis.winTeam : analysis.loseTeam
 
-              // Get losers and their pairwise info
-              const [loser1, loser2] = Array.from(analysis.loseTeam)
-              const loserKey = getPairwiseKey(loser1, loser2)
-              const loserPairwiseBefore = analysis.beforePairwise.get(loserKey) || 0
+              const [teamA1, teamA2] = Array.from(teamA)
+              const [teamB1, teamB2] = Array.from(teamB)
+
+              const teamAKey = getPairwiseKey(teamA1, teamA2)
+              const teamBKey = getPairwiseKey(teamB1, teamB2)
+              const teamAPairwiseBefore = analysis.beforePairwise.get(teamAKey) || 0
+              const teamBPairwiseBefore = analysis.beforePairwise.get(teamBKey) || 0
+
+              // Determine elo delta based on which team won
+              const teamAWon = teamA === analysis.winTeam
+              const teamAEloDelta = teamAWon ? analysis.eloChange : -analysis.eloChange
+              const teamBEloDelta = teamAWon ? -analysis.eloChange : analysis.eloChange
+              const teamAPairwiseDelta = teamAWon ? analysis.pairwiseDelta : -analysis.pairwiseDelta
+              const teamBPairwiseDelta = teamAWon ? -analysis.pairwiseDelta : analysis.pairwiseDelta
+
+              // Win probability is always from winner's perspective, adjust if swapped
+              const winProbability = shouldSwap ? 1 - analysis.expectedWinProbability : analysis.expectedWinProbability
 
               return (
                 <tr key={startIdx + idx} className="border-b border-gray-700 hover:bg-gray-800">
-                  <td className="p-3 text-gray-100">{matchNumber}</td>
                   <td className="p-3">
                     <TeamEloDisplay
                       players={[
-                        { name: winner1, elo: getPlayerElo(winner1, analysis), eloDelta: analysis.eloChange },
-                        { name: winner2, elo: getPlayerElo(winner2, analysis), eloDelta: analysis.eloChange }
+                        { name: teamA1, elo: getPlayerElo(teamA1, analysis), eloDelta: teamAEloDelta },
+                        { name: teamA2, elo: getPlayerElo(teamA2, analysis), eloDelta: teamAEloDelta }
                       ]}
-                      pairwiseAdjustment={winnerPairwiseBefore}
-                      pairwiseDelta={analysis.pairwiseDelta}
+                      pairwiseAdjustment={teamAPairwiseBefore}
+                      pairwiseDelta={teamAPairwiseDelta}
                       showTotal={true}
                     />
                   </td>
                   <td className="p-3">
                     <TeamEloDisplay
                       players={[
-                        { name: loser1, elo: getPlayerElo(loser1, analysis), eloDelta: -analysis.eloChange },
-                        { name: loser2, elo: getPlayerElo(loser2, analysis), eloDelta: -analysis.eloChange }
+                        { name: teamB1, elo: getPlayerElo(teamB1, analysis), eloDelta: teamBEloDelta },
+                        { name: teamB2, elo: getPlayerElo(teamB2, analysis), eloDelta: teamBEloDelta }
                       ]}
-                      pairwiseAdjustment={loserPairwiseBefore}
-                      pairwiseDelta={-analysis.pairwiseDelta}
+                      pairwiseAdjustment={teamBPairwiseBefore}
+                      pairwiseDelta={teamBPairwiseDelta}
                       showTotal={true}
                     />
                   </td>
-                  <td className="p-3 text-gray-100">{formatPercent(analysis.expectedWinProbability)}</td>
+                  <td className="p-3 text-gray-100">{formatPercent(winProbability)}</td>
                 </tr>
               )
             })}

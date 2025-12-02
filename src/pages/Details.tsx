@@ -1,14 +1,15 @@
 import { PlayerOrTeamDetails } from '../components/PlayerOrTeamDetails'
-import type { Engine } from '../engine/main'
+import type { Engine, MatchAnalysis } from '../engine/main'
 
 interface DetailsPageProps {
   engine: Engine
+  matches: MatchAnalysis[]
 }
 
-export function DetailsPage({ engine }: DetailsPageProps) {
+export function DetailsPage({ engine, matches }: DetailsPageProps) {
   return (
     <div>
-      <PlayerOrTeamDetails engine={engine} />
+      <PlayerOrTeamDetails engine={engine} matches={matches} />
     </div>
   )
 }

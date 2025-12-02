@@ -70,7 +70,7 @@ function App() {
 
           <Routes>
             <Route path="" element={<Navigate to="teams" replace />} />
-            <Route path="details" element={<DetailsPage engine={engineData.engine} />} />
+            <Route path="details" element={<DetailsPage engine={engineData.engine} matches={engineData.analyzedMatches} />} />
             <Route path="players" element={<PlayersPage engine={engineData.engine} />} />
             <Route path="teams" element={<TeamsPage engine={engineData.engine} />} />
             <Route path="matches" element={<MatchesPage matches={engineData.analyzedMatches} />} />
