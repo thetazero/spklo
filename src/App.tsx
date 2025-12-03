@@ -36,32 +36,30 @@ function App() {
     <HashRouter>
       <div className="min-h-screen bg-gray-900 text-gray-100">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-4xl font-bold mb-8 text-center text-gray-100">Spike ELO Rankings</h1>
-
           <nav className="mb-8">
-            <ul className="flex gap-4 justify-center">
+            <ul className="flex flex-wrap gap-2 sm:gap-4 justify-center">
               <li>
-                <Link to="teams" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                <Link to="teams" className="px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Teams
                 </Link>
               </li>
               <li>
-                <Link to="players" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                <Link to="players" className="px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Players
                 </Link>
               </li>
               <li>
-                <Link to="matches" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                <Link to="matches" className="px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Matches
                 </Link>
               </li>
               <li>
-                <Link to="details" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                <Link to="details" className="px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Details
                 </Link>
               </li>
               <li>
-                <Link to="stats" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-100">
+                <Link to="stats" className="px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Stats
                 </Link>
               </li>
