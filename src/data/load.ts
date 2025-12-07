@@ -18,6 +18,7 @@ const new_names_map: { [key: string]: PlayerName } = {
   neel: "Neel",
   simon: "Simon",
   guarov: "Guarov",
+  katie: "Katie",
 }
 
 const str_to_player: (player_str: string) => PlayerName = (player_str: string) => {
