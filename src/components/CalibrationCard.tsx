@@ -81,9 +81,6 @@ export function CalibrationCard({ matches, numBuckets = 10 }: CalibrationCardPro
     { header: 'Count', type: 'number' as const }
   ]
 
-  // Calculate overall statistics for "All" row
-  const totalCount = buckets.reduce((sum, b) => sum + b.count, 0)
-
   const rows = buckets.map((bucket) => {
     const relativeDifference = (bucket.predictedWinRate / bucket.observedWinRate - 1) * 100
     const diffColor ='text-gray-400'
