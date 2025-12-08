@@ -87,7 +87,7 @@ function App() {
             <Route path="players" element={<PlayersPage engine={engineData.engine} />} />
             <Route path="teams" element={<TeamsPage engine={engineData.engine} />} />
             <Route path="matches" element={<MatchesPage matches={engineData.analyzedMatches} />} />
-            <Route path="stats" element={<StatsPage totalMatches={engineData.analyzedMatches.length} bceLoss={engineData.engine.bceLoss} />} />
+            <Route path="stats" element={<StatsPage totalMatches={engineData.analyzedMatches.length} bceLoss={engineData.engine.bceLoss} matches={engineData.analyzedMatches} />} />
           </Routes>
         </div>
       </div>
