@@ -2,11 +2,6 @@ import type { MatchAnalysis } from '../engine/main'
 import type { PlayerName } from '../engine/types'
 import { Table } from './Table'
 
-interface ConfidenceInterval {
-  lower: number
-  upper: number
-}
-
 interface PlayerStats {
   player: PlayerName
   expectedWins: number
@@ -16,31 +11,6 @@ interface PlayerStats {
 
 interface PlayerCalibrationCardProps {
   matches: MatchAnalysis[]
-}
-
-// Calculate confidence interval using Wilson score interval for binomial proportion
-function calculateCI(successes: number, trials: number, p: number): ConfidenceInterval {
-  if (trials === 0) {
-    return { lower: 0, upper: 0 }
-  }
-
-  const proportion = successes / trials
-
-  // Calculate z-score from p-value (two-tailed)
-  // For p=0.90 (90% CI), we want 95th percentile (one-tail) = 1.645
-  // For p=0.99 (99% CI), we want 99.5th percentile (one-tail) = 2.576
-  const z = p === 0.90 ? 1.645 : p === 0.99 ? 2.576 : 1.96
-
-  const denominator = 1 + (z * z) / trials
-  const center = (proportion + (z * z) / (2 * trials)) / denominator
-  const margin = (z / denominator) * Math.sqrt(
-    (proportion * (1 - proportion)) / trials + (z * z) / (4 * trials * trials)
-  )
-
-  const lower = Math.max(0, center - margin) * trials
-  const upper = Math.min(1, center + margin) * trials
-
-  return { lower, upper }
 }
 
 function calculatePlayerStats(matches: MatchAnalysis[]): PlayerStats[] {
@@ -93,12 +63,6 @@ function formatRelativeDiff(diff: number): string {
   return diff > 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`
 }
 
-function confidenceIntervalText(ci: ConfidenceInterval, expected: number): string {
-  const lowerDiff = computeRelativeDifference(expected, ci.lower)
-  const upperDiff = computeRelativeDifference(expected, ci.upper)
-  return `[${formatRelativeDiff(lowerDiff)}, ${formatRelativeDiff(upperDiff)}]`
-}
-
 export function PlayerCalibrationCard({ matches }: PlayerCalibrationCardProps) {
   const playerStats = calculatePlayerStats(matches)
 
@@ -107,15 +71,10 @@ export function PlayerCalibrationCard({ matches }: PlayerCalibrationCardProps) {
     { header: 'Expected Wins', type: 'number' as const },
     { header: 'Actual Wins', type: 'number' as const },
     { header: 'Difference', type: 'number' as const },
-    { header: '90% CI', type: 'string' as const },
-    { header: '99% CI', type: 'string' as const },
     { header: 'Matches', type: 'number' as const }
   ]
 
   const rows = playerStats.map((stats) => {
-    const ci90 = calculateCI(stats.actualWins, stats.totalMatches, 0.90)
-    const ci99 = calculateCI(stats.actualWins, stats.totalMatches, 0.99)
-
     const relativeDifference = computeRelativeDifference(stats.expectedWins, stats.actualWins)
 
     // Color based on which CI the expected wins fall into
@@ -143,22 +102,6 @@ export function PlayerCalibrationCard({ matches }: PlayerCalibrationCardProps) {
         rendered: (
           <span className={`font-semibold ${diffColor}`}>
             {formatRelativeDiff(relativeDifference)}
-          </span>
-        )
-      },
-      {
-        simple: `[${ci90.lower.toFixed(1)}, ${ci90.upper.toFixed(1)}]`,
-        rendered: (
-          <span className="text-gray-400">
-            {confidenceIntervalText(ci90, stats.expectedWins)}
-          </span>
-        )
-      },
-      {
-        simple: `[${ci99.lower.toFixed(1)}, ${ci99.upper.toFixed(1)}]`,
-        rendered: (
-          <span className="text-gray-400">
-            {confidenceIntervalText(ci99, stats.expectedWins)}
           </span>
         )
       },
