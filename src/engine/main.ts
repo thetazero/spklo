@@ -1,5 +1,12 @@
 import type { Match, PlayerName } from "./types.ts";
 
+export interface EngineConfig {
+    highK: number;
+    normalK: number;
+    highKMatchCount: number;
+    pairwiseFactor: number;
+}
+
 export interface MatchAnalysis {
     eloChange: number;
     expectedWinProbability: number;
@@ -16,26 +23,15 @@ export class Engine {
     matchCounts: { [key in PlayerName]: number };
     pairwiseAdjustments: Map<string, number>;
     pairMatchCounts: Map<string, number>;
-    highK: number;
-    normalK: number;
-    highKMatchCount: number;
-    pairwiseFactor: number;
+    config: EngineConfig;
 
-    constructor(
-        highK: number = 64,
-        normalK: number = 32,
-        highKMatchCount: number = 10,
-        pairwiseFactor: number = 0
-    ) {
+    constructor(config: EngineConfig) {
+        this.config = config;
         this.elos = {};
         this.bceLoss = 0;
         this.matchCounts = {};
         this.pairwiseAdjustments = new Map();
         this.pairMatchCounts = new Map();
-        this.highK = highK;
-        this.normalK = normalK;
-        this.highKMatchCount = highKMatchCount;
-        this.pairwiseFactor = pairwiseFactor;
     }
 
     getElo(player: PlayerName): number {
@@ -47,7 +43,7 @@ export class Engine {
     }
 
     getKFactor(player: PlayerName): number {
-        return this.getMatchCount(player) < this.highKMatchCount ? this.highK : this.normalK;
+        return this.getMatchCount(player) < this.config.highKMatchCount ? this.config.highK : this.config.normalK;
     }
 
     getPairwiseKey(player1: PlayerName, player2: PlayerName): string {
@@ -70,7 +66,7 @@ export class Engine {
         let totalElo = this.getCombinedElo(team);
 
         // Add pairwise adjustment for the teammate pair (exactly 2 players)
-        if (this.pairwiseFactor > 0) {
+        if (this.config.pairwiseFactor > 0) {
             const [player1, player2] = Array.from(team);
             totalElo += this.getPairwiseAdjustment(player1, player2);
         }
@@ -133,7 +129,7 @@ export class Engine {
 
         // Update pairwise adjustments and match counts for teammate pairs
         // Since we have exactly 2 players per team, there's only one pair per team
-        const pairwiseDelta = eloChange * this.pairwiseFactor;
+        const pairwiseDelta = eloChange * this.config.pairwiseFactor;
 
         // Update winning team pair
         const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
@@ -166,12 +162,14 @@ export interface EngineAndMatches {
 
 export function createEngine(
     matches: Match[],
-    highK: number = 128,
-    normalK: number = 4,
-    highKMatchCount: number = 4,
-    pairwiseFactor: number = 1.0,
+    config: EngineConfig = {
+        highK: 128,
+        normalK: 4,
+        highKMatchCount: 4,
+        pairwiseFactor: 1.0,
+    },
 ): EngineAndMatches {
-    const engine = new Engine(highK, normalK, highKMatchCount, pairwiseFactor);
+    const engine = new Engine(config);
     const analyzed_matches: MatchAnalysis[] = [];
     for (const match of matches) {
         const analysis = engine.analyzeMatch(match);
