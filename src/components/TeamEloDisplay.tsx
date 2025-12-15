@@ -1,7 +1,7 @@
 interface Player {
   name: string
   elo: number
-  eloDelta: number
+  eloDelta?: number
 }
 
 interface TeamEloDisplayProps {
