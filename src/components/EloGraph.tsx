@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import type { PlayerName } from '../engine/types'
 
 interface EloGraphProps {
   eloHistory: number[]
+  selectedPlayers: PlayerName[]
 }
 
 interface TooltipData {
@@ -11,7 +13,7 @@ interface TooltipData {
   elo: number
 }
 
-export function EloGraph({ eloHistory }: EloGraphProps) {
+export function EloGraph({ eloHistory, selectedPlayers }: EloGraphProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null)
 
   if (eloHistory.length === 0) return null
@@ -58,7 +60,7 @@ export function EloGraph({ eloHistory }: EloGraphProps) {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-bold text-gray-100 mb-4">ELO Over Time</h2>
+      <h2 className="text-2xl font-bold text-gray-100 mb-4">ELO Over Time For {selectedPlayers.join(', ')}</h2>
       <div className="overflow-x-auto">
         <svg width={width} height={height} className="text-gray-100">
           {/* Y-axis */}

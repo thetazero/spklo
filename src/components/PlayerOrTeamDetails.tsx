@@ -149,7 +149,7 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
 
       {/* ELO Graph */}
       {selectedPlayers.length > 0 && eloHistory.length > 0 && (
-        <EloGraph eloHistory={eloHistory} />
+        <EloGraph eloHistory={eloHistory} selectedPlayers={selectedPlayers} />
       )}
 
       {/* Match History */}
