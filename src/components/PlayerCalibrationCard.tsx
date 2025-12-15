@@ -56,7 +56,7 @@ function calculatePlayerStats(matches: MatchAnalysis[]): PlayerStats[] {
 }
 
 function computeRelativeDifference(expected: number, actual: number): number {
-  return expected > 0 ? (actual - expected) / expected * 100 : 0
+  return expected > 0 ? (expected - actual) / actual * 100 : 0
 }
 
 function formatRelativeDiff(diff: number): string {
