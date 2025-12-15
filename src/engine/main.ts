@@ -8,13 +8,80 @@ export interface EngineConfig {
 }
 
 export interface MatchAnalysis {
-    eloChange: number;
+    eloChanges: Map<PlayerName, number>;
     expectedWinProbability: number;
     winTeam: Set<PlayerName>;
     loseTeam: Set<PlayerName>;
     beforeElos: { [key in PlayerName]: number };
     beforePairwise: Map<string, number>;
-    pairwiseDelta: number;
+    winnerPairwiseDelta: number;
+    loserPairwiseDelta: number;
+}
+
+export class EloChanger {
+    calculateChanges(
+        winnerTeam: Set<PlayerName>,
+        loserTeam: Set<PlayerName>,
+        winnerElo: number,
+        loserElo: number,
+        getKFactor: (player: PlayerName) => number,
+        getPairwiseK: (players: PlayerName[]) => number
+    ): {
+        playerChanges: Map<PlayerName, number>,
+        expectedWinProbability: number,
+        winnerPairwiseChange: number,
+        loserPairwiseChange: number
+    } {
+        // Calculate total K for each team (sum of individual K factors + pairwise K)
+        const winnerPlayers = Array.from(winnerTeam);
+        const loserPlayers = Array.from(loserTeam);
+
+        const winnerPlayerK = winnerPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
+        const loserPlayerK = loserPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
+
+        const winnerPairK = getPairwiseK(winnerPlayers);
+        const loserPairK = getPairwiseK(loserPlayers);
+
+        const winnerTotalK = winnerPlayerK + winnerPairK;
+        const loserTotalK = loserPlayerK + loserPairK;
+
+        // Use average of team totals for the overall Elo change calculation
+        const averageK = (winnerTotalK + loserTotalK) / 2;
+
+        // Calculate expected win probability
+        const expectedWinProbability = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
+
+        // Calculate base ELO change (actual - expected)
+        const baseEloChange = averageK * (1 - expectedWinProbability);
+
+        // Calculate weighted changes for each player
+        const playerChanges = new Map<PlayerName, number>();
+
+        // Distribute change to winners proportionally based on their K contribution
+        for (const player of winnerPlayers) {
+            const playerK = getKFactor(player);
+            const weightedChange = (playerK / winnerTotalK) * baseEloChange;
+            playerChanges.set(player, weightedChange);
+        }
+
+        // Distribute change to losers proportionally based on their K contribution
+        for (const player of loserPlayers) {
+            const playerK = getKFactor(player);
+            const weightedChange = (playerK / loserTotalK) * baseEloChange;
+            playerChanges.set(player, -weightedChange);
+        }
+
+        // Calculate pairwise changes proportionally based on pairwise K contribution
+        const winnerPairwiseChange = (winnerPairK / winnerTotalK) * baseEloChange;
+        const loserPairwiseChange = -(loserPairK / loserTotalK) * baseEloChange;
+
+        return {
+            playerChanges,
+            expectedWinProbability,
+            winnerPairwiseChange,
+            loserPairwiseChange
+        };
+    }
 }
 
 export class Engine {
@@ -24,6 +91,7 @@ export class Engine {
     pairwiseAdjustments: Map<string, number>;
     pairMatchCounts: Map<string, number>;
     config: EngineConfig;
+    eloChanger: EloChanger;
 
     constructor(config: EngineConfig) {
         this.config = config;
@@ -32,6 +100,7 @@ export class Engine {
         this.matchCounts = {};
         this.pairwiseAdjustments = new Map();
         this.pairMatchCounts = new Map();
+        this.eloChanger = new EloChanger();
     }
 
     getElo(player: PlayerName): number {
@@ -58,6 +127,10 @@ export class Engine {
         return this.pairMatchCounts.get(this.getPairwiseKey(player1, player2)) || 0;
     }
 
+    getPairwiseK(player1: PlayerName, player2: PlayerName): number {
+        return (this.getKFactor(player1) + this.getKFactor(player2))/2 * this.config.pairwiseFactor;
+    }
+
     getCombinedElo(players: Set<PlayerName>): number {
         return Array.from(players).reduce((sum, player) => sum + this.getElo(player), 0);
     }
@@ -80,23 +153,32 @@ export class Engine {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
 
-        // Calculate average K factor across all players
-        const allPlayers = [...match.winner, ...match.loser];
-        const averageK = allPlayers.reduce((sum, player) => sum + this.getKFactor(player), 0) / allPlayers.length;
-
         // Get combined team ELOs with pairwise adjustments
         const winnerElo = this.getCombinedEloWithPairwise(match.winner);
         const loserElo = this.getCombinedEloWithPairwise(match.loser);
 
-        // Calculate expected scores
-        const expectedWinProbability = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
+        const [winner1, winner2] = Array.from(match.winner);
+        const [loser1, loser2] = Array.from(match.loser);
 
-        // Calculate ELO change (actual - expected)
-        const eloChange = averageK * (1 - expectedWinProbability);
+        // Calculate Elo changes using EloChanger
+        const {
+            playerChanges,
+            expectedWinProbability,
+            winnerPairwiseChange,
+            loserPairwiseChange
+        } = this.eloChanger.calculateChanges(
+            match.winner,
+            match.loser,
+            winnerElo,
+            loserElo,
+            (player) => this.getKFactor(player),
+            (players) => this.getPairwiseK(players[0], players[1])
+        );
 
         // Update BCE loss: -log(p) where p is the predicted probability of the actual outcome
         this.bceLoss += -Math.log(expectedWinProbability);
 
+        // Capture state before updating
         const beforeElos: { [key in PlayerName]: number } = {};
         for (const player of match.winner) {
             beforeElos[player] = this.getElo(player);
@@ -105,52 +187,38 @@ export class Engine {
             beforeElos[player] = this.getElo(player);
         }
 
-        // Capture pairwise adjustments before the match (for teammate pairs)
-        // Since we have exactly 2 players per team, there's only one pair per team
         const beforePairwise = new Map<string, number>();
-        const [winner1, winner2] = Array.from(match.winner);
-        const [loser1, loser2] = Array.from(match.loser);
-
         const winnerKey = this.getPairwiseKey(winner1, winner2);
         const loserKey = this.getPairwiseKey(loser1, loser2);
         beforePairwise.set(winnerKey, this.getPairwiseAdjustment(winner1, winner2));
         beforePairwise.set(loserKey, this.getPairwiseAdjustment(loser1, loser2));
 
-        // Update each player's ELO and match count
-        for (const player of match.winner) {
-            this.elos[player] = this.getElo(player) + eloChange;
+        // Apply Elo changes and update match counts
+        for (const [player, change] of playerChanges) {
+            this.elos[player] = this.getElo(player) + change;
             this.matchCounts[player] = this.getMatchCount(player) + 1;
         }
 
-        for (const player of match.loser) {
-            this.elos[player] = this.getElo(player) - eloChange;
-            this.matchCounts[player] = this.getMatchCount(player) + 1;
-        }
-
-        // Update pairwise adjustments and match counts for teammate pairs
-        // Since we have exactly 2 players per team, there's only one pair per team
-        const pairwiseDelta = eloChange * this.config.pairwiseFactor;
-
-        // Update winning team pair
+        // Update pairwise adjustments and match counts for teammate pairs using calculated changes
         const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
         const winnerPairCount = this.getPairMatchCount(winner1, winner2);
-        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + pairwiseDelta);
+        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + winnerPairwiseChange);
         this.pairMatchCounts.set(winnerKey, winnerPairCount + 1);
 
-        // Update losing team pair
         const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
         const loserPairCount = this.getPairMatchCount(loser1, loser2);
-        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj - pairwiseDelta);
+        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj + loserPairwiseChange);
         this.pairMatchCounts.set(loserKey, loserPairCount + 1);
 
         return {
-            eloChange,
+            eloChanges: playerChanges,
             expectedWinProbability,
             winTeam: match.winner,
             loseTeam: match.loser,
             beforeElos,
             beforePairwise,
-            pairwiseDelta,
+            winnerPairwiseDelta: winnerPairwiseChange,
+            loserPairwiseDelta: loserPairwiseChange,
         }
     }
 }
