@@ -8,6 +8,7 @@ export interface EngineConfig {
     normalK: number;
     highKMatchCount: number;
     pairwiseFactor: number;
+    elligibleForEloRedistributionThresholdMatches: number;
     initialSeeds: { [key in PlayerName]: number };
 }
 
@@ -36,6 +37,7 @@ export class Engine {
             highK: config.highK,
             normalK: config.normalK,
             highKMatchCount: config.highKMatchCount,
+            elligibleForEloRedistributionThresholdMatches: config.elligibleForEloRedistributionThresholdMatches,
         });
         this.bceLoss = 0;
         this.pairwiseAdjustments = new Map();
@@ -170,7 +172,6 @@ export interface EngineAndMatches {
     analyzedMatches: MatchAnalysis[];
 }
 
-
 export function createEngine(
     matches: Match[],
     config: EngineConfig = {
@@ -179,11 +180,12 @@ export function createEngine(
         highKMatchCount: 4,
         pairwiseFactor: 1.0,
         initialSeeds: {
-            "katie": 200,
-            "yonah": 460,
-            "sophia": 390,
-            "loshaleft": 360,
-        }
+            "katie": 160,
+            "yonah": 480,
+            "sophia": 440,
+            "loshaleft": 240,
+        },
+        elligibleForEloRedistributionThresholdMatches: 10,
     },
 ): EngineAndMatches {
     const engine = new Engine(config);

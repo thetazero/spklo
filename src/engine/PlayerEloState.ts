@@ -5,6 +5,7 @@ export interface PlayerStateConfig {
     highK: number;
     normalK: number;
     highKMatchCount: number;
+    elligibleForEloRedistributionThresholdMatches: number;
 }
 
 const initialElo = 500;
@@ -30,18 +31,27 @@ export class PlayerEloState {
             const seedKey = player.toLowerCase();
             if (!(player in this.elos) && (seedKey in this.config.seeds)) {
                 const seedElo = this.config.seeds[seedKey];
-                const eloDelta = (initialElo - seedElo) / Object.keys(this.elos).length;
-                this.applyDeltaToAll(eloDelta);
+
+                const playersForRedistribution = this.playersElligibleForEloRedistribution();
+
+                const eloDelta = (initialElo - seedElo) / playersForRedistribution.length;
+
+                for (const p of playersForRedistribution) {
+                    this.elos[p] += eloDelta;
+                }
+
                 this.elos[player] = seedElo;
                 console.log(`Applying seed for new player ${player}: ${seedElo}`, player in this.elos);
+                console.log(`Redistributing ${-eloDelta.toFixed(2)} each of to ${playersForRedistribution.join(", ")}`);
             }
         }
     }
 
-    private applyDeltaToAll(delta: number): void {
-        for (const player in this.elos) {
-            this.elos[player] += delta;
-        }
+    private playersElligibleForEloRedistribution(): PlayerName[] {
+        return Object.keys(this.elos).filter(player => {
+            const gamesPlayed = this.getMatchCount(player);
+            return gamesPlayed >= this.config.elligibleForEloRedistributionThresholdMatches;
+        })
     }
 
     getElo(player: PlayerName): number {
