@@ -27,7 +27,7 @@ export function StatisticsCard({ totalMatches, bceLoss }: StatisticsCardProps) {
         <StatisticItem label="Total Matches" value={totalMatches} />
         <StatisticItem label="Total BCE Loss" value={bceLoss.toFixed(2)} />
         <StatisticItem label="Average BCE Loss" value={averageBceLoss.toFixed(4)} />
-        <StatisticItem label="Implied Win Probability" value={`${(impliedWinProbability * 100).toFixed(2)}%`} />
+        <StatisticItem label="Implied Win Probability" value={`${(impliedWinProbability * 100).toFixed(3)}%`} />
       </div>
     </div>
   )
