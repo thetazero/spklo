@@ -7,7 +7,8 @@ export interface MatchAnalysis {
     loseTeam: Set<PlayerName>;
     beforeElos: { [key in PlayerName]: number };
     beforePairwise: Map<string, number>;
-    pairwiseDelta: number;
+    winnerPairwiseDelta: number;
+    loserPairwiseDelta: number;
 }
 
 export class EloChanger {
@@ -16,14 +17,26 @@ export class EloChanger {
         loserTeam: Set<PlayerName>,
         winnerElo: number,
         loserElo: number,
-        getKFactor: (player: PlayerName) => number
-    ): { playerChanges: Map<PlayerName, number>, expectedWinProbability: number, baseEloChange: number } {
-        // Calculate total K for each team (sum of individual K factors)
+        getKFactor: (player: PlayerName) => number,
+        getPairwiseK: (players: PlayerName[]) => number
+    ): {
+        playerChanges: Map<PlayerName, number>,
+        expectedWinProbability: number,
+        winnerPairwiseChange: number,
+        loserPairwiseChange: number
+    } {
+        // Calculate total K for each team (sum of individual K factors + pairwise K)
         const winnerPlayers = Array.from(winnerTeam);
         const loserPlayers = Array.from(loserTeam);
 
-        const winnerTotalK = winnerPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
-        const loserTotalK = loserPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
+        const winnerPlayerK = winnerPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
+        const loserPlayerK = loserPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
+
+        const winnerPairK = getPairwiseK(winnerPlayers);
+        const loserPairK = getPairwiseK(loserPlayers);
+
+        const winnerTotalK = winnerPlayerK + winnerPairK;
+        const loserTotalK = loserPlayerK + loserPairK;
 
         // Use average of team totals for the overall Elo change calculation
         const averageK = (winnerTotalK + loserTotalK) / 2;
@@ -37,21 +50,30 @@ export class EloChanger {
         // Calculate weighted changes for each player
         const playerChanges = new Map<PlayerName, number>();
 
-        // Distribute change to winners proportionally
+        // Distribute change to winners proportionally based on their K contribution
         for (const player of winnerPlayers) {
             const playerK = getKFactor(player);
             const weightedChange = (playerK / winnerTotalK) * baseEloChange;
             playerChanges.set(player, weightedChange);
         }
 
-        // Distribute change to losers proportionally
+        // Distribute change to losers proportionally based on their K contribution
         for (const player of loserPlayers) {
             const playerK = getKFactor(player);
             const weightedChange = (playerK / loserTotalK) * baseEloChange;
             playerChanges.set(player, -weightedChange);
         }
 
-        return { playerChanges, expectedWinProbability, baseEloChange };
+        // Calculate pairwise changes proportionally based on pairwise K contribution
+        const winnerPairwiseChange = (winnerPairK / winnerTotalK) * baseEloChange;
+        const loserPairwiseChange = -(loserPairK / loserTotalK) * baseEloChange;
+
+        return {
+            playerChanges,
+            expectedWinProbability,
+            winnerPairwiseChange,
+            loserPairwiseChange
+        };
     }
 }
 
@@ -112,6 +134,10 @@ export class Engine {
         return this.pairMatchCounts.get(this.getPairwiseKey(player1, player2)) || 0;
     }
 
+    getPairwiseK(player1: PlayerName, player2: PlayerName): number {
+        return (this.getKFactor(player1) + this.getKFactor(player2))/2 * this.pairwiseFactor;
+    }
+
     getCombinedElo(players: Set<PlayerName>): number {
         return Array.from(players).reduce((sum, player) => sum + this.getElo(player), 0);
     }
@@ -138,13 +164,22 @@ export class Engine {
         const winnerElo = this.getCombinedEloWithPairwise(match.winner);
         const loserElo = this.getCombinedEloWithPairwise(match.loser);
 
+        const [winner1, winner2] = Array.from(match.winner);
+        const [loser1, loser2] = Array.from(match.loser);
+
         // Calculate Elo changes using EloChanger
-        const { playerChanges, expectedWinProbability, baseEloChange } = this.eloChanger.calculateChanges(
+        const {
+            playerChanges,
+            expectedWinProbability,
+            winnerPairwiseChange,
+            loserPairwiseChange
+        } = this.eloChanger.calculateChanges(
             match.winner,
             match.loser,
             winnerElo,
             loserElo,
-            (player) => this.getKFactor(player)
+            (player) => this.getKFactor(player),
+            (players) => this.getPairwiseK(players[0], players[1])
         );
 
         // Update BCE loss: -log(p) where p is the predicted probability of the actual outcome
@@ -160,9 +195,6 @@ export class Engine {
         }
 
         const beforePairwise = new Map<string, number>();
-        const [winner1, winner2] = Array.from(match.winner);
-        const [loser1, loser2] = Array.from(match.loser);
-
         const winnerKey = this.getPairwiseKey(winner1, winner2);
         const loserKey = this.getPairwiseKey(loser1, loser2);
         beforePairwise.set(winnerKey, this.getPairwiseAdjustment(winner1, winner2));
@@ -174,17 +206,15 @@ export class Engine {
             this.matchCounts[player] = this.getMatchCount(player) + 1;
         }
 
-        // Update pairwise adjustments and match counts for teammate pairs
-        const pairwiseDelta = baseEloChange * this.pairwiseFactor;
-
+        // Update pairwise adjustments and match counts for teammate pairs using calculated changes
         const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
         const winnerPairCount = this.getPairMatchCount(winner1, winner2);
-        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + pairwiseDelta);
+        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + winnerPairwiseChange);
         this.pairMatchCounts.set(winnerKey, winnerPairCount + 1);
 
         const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
         const loserPairCount = this.getPairMatchCount(loser1, loser2);
-        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj - pairwiseDelta);
+        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj + loserPairwiseChange);
         this.pairMatchCounts.set(loserKey, loserPairCount + 1);
 
         return {
@@ -194,7 +224,8 @@ export class Engine {
             loseTeam: match.loser,
             beforeElos,
             beforePairwise,
-            pairwiseDelta,
+            winnerPairwiseDelta: winnerPairwiseChange,
+            loserPairwiseDelta: loserPairwiseChange,
         }
     }
 }
@@ -209,7 +240,7 @@ export function createEngine(
     highK: number = 128,
     normalK: number = 4,
     highKMatchCount: number = 4,
-    pairwiseFactor: number = 0.5,
+    pairwiseFactor: number = 1.0,
 ): EngineAndMatches {
     const engine = new Engine(highK, normalK, highKMatchCount, pairwiseFactor);
     const analyzed_matches: MatchAnalysis[] = [];

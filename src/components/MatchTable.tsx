@@ -79,8 +79,8 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
 
               // Determine elo delta based on which team won
               const teamAWon = teamA === analysis.winTeam
-              const teamAPairwiseDelta = teamAWon ? analysis.pairwiseDelta : -analysis.pairwiseDelta
-              const teamBPairwiseDelta = teamAWon ? -analysis.pairwiseDelta : analysis.pairwiseDelta
+              const teamAPairwiseDelta = teamAWon ? analysis.winnerPairwiseDelta : -analysis.loserPairwiseDelta
+              const teamBPairwiseDelta = teamAWon ? -analysis.winnerPairwiseDelta : analysis.loserPairwiseDelta
 
               // Win probability is always from winner's perspective, adjust if swapped
               const winProbability = shouldSwap ? 1 - analysis.expectedWinProbability : analysis.expectedWinProbability
