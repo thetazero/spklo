@@ -23,20 +23,21 @@ const new_names_map: { [key: string]: PlayerName } = {
 
 const str_to_player: (player_str: string) => PlayerName = (player_str: string) => {
     player_str = player_str.trim().toLowerCase();
-    if (player_str in new_names_map) {
-        return new_names_map[player_str];
+    if (player_str.length === 1) {
+        const player_name = old_names_map[player_str];
+        if (!player_name) {
+            console.log(player_str)
+            console.log(old_names_map[player_str])
+            throw new Error(`Unknown player: ${player_str}`);
+        }
+        return player_name;
+    } else {
+        if (player_str in new_names_map) {
+            return new_names_map[player_str];
+        }
     }
-    if (player_str.length !== 1) {
-        throw new Error(`Invalid player name: ${player_str}`);
-    }
-
-    const player_name = old_names_map[player_str];
-    if (!player_name) {
-        console.log(player_str)
-        console.log(old_names_map[player_str])
-        throw new Error(`Unknown player: ${player_str}`);
-    }
-    return player_name;
+    // capitalize first letter
+    return player_str.charAt(0).toUpperCase() + player_str.slice(1);
 }
 
 export async function loadMatches(path: string): Promise<Match[]> {
