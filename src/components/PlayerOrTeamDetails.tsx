@@ -16,7 +16,7 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
   const [selectedPlayers, setSelectedPlayers] = useState<PlayerName[]>([])
 
   // Get all available players sorted by name
-  const availablePlayers = Object.keys(engine.elos).sort()
+  const availablePlayers = Object.keys(engine.playerState.elos).sort()
 
   // Filter matches based on selected players
   const filteredMatches = useMemo(() => {

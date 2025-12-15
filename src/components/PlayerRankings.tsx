@@ -12,7 +12,7 @@ export function PlayerRankings({ engine }: PlayerRankingsProps) {
     { header: 'Matches', type: 'number' as const },
   ]
 
-  const rows = Object.entries(engine.elos)
+  const rows = Object.entries(engine.playerState.elos)
     .sort(([, a], [, b]) => b - a)
     .map(([player, elo]) => {
       const matchCount = engine.getMatchCount(player)

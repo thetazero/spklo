@@ -1,10 +1,14 @@
 import type { Match, PlayerName } from "./types.ts";
 
+import { calculateChanges } from "./eloChanger.ts";
+import { PlayerEloState } from "./PlayerEloState.ts";
+
 export interface EngineConfig {
     highK: number;
     normalK: number;
     highKMatchCount: number;
     pairwiseFactor: number;
+    initialSeeds: { [key in PlayerName]: number };
 }
 
 export interface MatchAnalysis {
@@ -18,101 +22,36 @@ export interface MatchAnalysis {
     loserPairwiseDelta: number;
 }
 
-export class EloChanger {
-    calculateChanges(
-        winnerTeam: Set<PlayerName>,
-        loserTeam: Set<PlayerName>,
-        winnerElo: number,
-        loserElo: number,
-        getKFactor: (player: PlayerName) => number,
-        getPairwiseK: (players: PlayerName[]) => number
-    ): {
-        playerChanges: Map<PlayerName, number>,
-        expectedWinProbability: number,
-        winnerPairwiseChange: number,
-        loserPairwiseChange: number
-    } {
-        // Calculate total K for each team (sum of individual K factors + pairwise K)
-        const winnerPlayers = Array.from(winnerTeam);
-        const loserPlayers = Array.from(loserTeam);
-
-        const winnerPlayerK = winnerPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
-        const loserPlayerK = loserPlayers.reduce((sum, player) => sum + getKFactor(player), 0);
-
-        const winnerPairK = getPairwiseK(winnerPlayers);
-        const loserPairK = getPairwiseK(loserPlayers);
-
-        const winnerTotalK = winnerPlayerK + winnerPairK;
-        const loserTotalK = loserPlayerK + loserPairK;
-
-        // Use average of team totals for the overall Elo change calculation
-        const averageK = (winnerTotalK + loserTotalK) / 2;
-
-        // Calculate expected win probability
-        const expectedWinProbability = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
-
-        // Calculate base ELO change (actual - expected)
-        const baseEloChange = averageK * (1 - expectedWinProbability);
-
-        // Calculate weighted changes for each player
-        const playerChanges = new Map<PlayerName, number>();
-
-        // Distribute change to winners proportionally based on their K contribution
-        for (const player of winnerPlayers) {
-            const playerK = getKFactor(player);
-            const weightedChange = (playerK / winnerTotalK) * baseEloChange;
-            playerChanges.set(player, weightedChange);
-        }
-
-        // Distribute change to losers proportionally based on their K contribution
-        for (const player of loserPlayers) {
-            const playerK = getKFactor(player);
-            const weightedChange = (playerK / loserTotalK) * baseEloChange;
-            playerChanges.set(player, -weightedChange);
-        }
-
-        // Calculate pairwise changes proportionally based on pairwise K contribution
-        const winnerPairwiseChange = (winnerPairK / winnerTotalK) * baseEloChange;
-        const loserPairwiseChange = -(loserPairK / loserTotalK) * baseEloChange;
-
-        return {
-            playerChanges,
-            expectedWinProbability,
-            winnerPairwiseChange,
-            loserPairwiseChange
-        };
-    }
-}
-
 export class Engine {
-    elos: { [key in PlayerName]: number };
+    playerState: PlayerEloState;
     bceLoss: number;
-    matchCounts: { [key in PlayerName]: number };
     pairwiseAdjustments: Map<string, number>;
     pairMatchCounts: Map<string, number>;
     config: EngineConfig;
-    eloChanger: EloChanger;
 
     constructor(config: EngineConfig) {
         this.config = config;
-        this.elos = {};
+        this.playerState = new PlayerEloState({
+            seeds: config.initialSeeds,
+            highK: config.highK,
+            normalK: config.normalK,
+            highKMatchCount: config.highKMatchCount,
+        });
         this.bceLoss = 0;
-        this.matchCounts = {};
         this.pairwiseAdjustments = new Map();
         this.pairMatchCounts = new Map();
-        this.eloChanger = new EloChanger();
     }
 
     getElo(player: PlayerName): number {
-        return this.elos[player] || 500;
+        return this.playerState.getElo(player);
     }
 
     getMatchCount(player: PlayerName): number {
-        return this.matchCounts[player] || 0;
+        return this.playerState.getMatchCount(player);
     }
 
     getKFactor(player: PlayerName): number {
-        return this.getMatchCount(player) < this.config.highKMatchCount ? this.config.highK : this.config.normalK;
+        return this.playerState.getKFactor(player);
     }
 
     getPairwiseKey(player1: PlayerName, player2: PlayerName): string {
@@ -152,6 +91,9 @@ export class Engine {
         if (match.winner.size !== 2 || match.loser.size !== 2) {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
+        // Apply player seed adjustments before the match
+        this.playerState.beforeMatchHook(match.winner);
+        this.playerState.beforeMatchHook(match.loser);
 
         // Get combined team ELOs with pairwise adjustments
         const winnerElo = this.getCombinedEloWithPairwise(match.winner);
@@ -166,7 +108,7 @@ export class Engine {
             expectedWinProbability,
             winnerPairwiseChange,
             loserPairwiseChange
-        } = this.eloChanger.calculateChanges(
+        } = calculateChanges(
             match.winner,
             match.loser,
             winnerElo,
@@ -195,8 +137,8 @@ export class Engine {
 
         // Apply Elo changes and update match counts
         for (const [player, change] of playerChanges) {
-            this.elos[player] = this.getElo(player) + change;
-            this.matchCounts[player] = this.getMatchCount(player) + 1;
+            this.playerState.addElo(player, change);
+            this.playerState.incrementMatchCount(player);
         }
 
         // Update pairwise adjustments and match counts for teammate pairs using calculated changes
@@ -228,6 +170,7 @@ export interface EngineAndMatches {
     analyzedMatches: MatchAnalysis[];
 }
 
+
 export function createEngine(
     matches: Match[],
     config: EngineConfig = {
@@ -235,6 +178,12 @@ export function createEngine(
         normalK: 4,
         highKMatchCount: 4,
         pairwiseFactor: 1.0,
+        initialSeeds: {
+            "katie": 220,
+            "yonah": 400,
+            "sophia": 330,
+            "loshaleft": 300,
+        }
     },
 ): EngineAndMatches {
     const engine = new Engine(config);
