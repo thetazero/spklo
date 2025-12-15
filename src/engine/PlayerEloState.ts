@@ -65,6 +65,9 @@ export class PlayerEloState {
     }
 
     getKFactor(player: PlayerName): number {
+        if (player.toLocaleLowerCase() in this.config.seeds) {
+            return this.config.normalK;
+        }
         return this.getMatchCount(player) < this.config.highKMatchCount ? this.config.highK : this.config.normalK;
     }
 }

@@ -179,10 +179,10 @@ export function createEngine(
         highKMatchCount: 4,
         pairwiseFactor: 1.0,
         initialSeeds: {
-            "katie": 220,
-            "yonah": 400,
-            "sophia": 330,
-            "loshaleft": 300,
+            "katie": 200,
+            "yonah": 460,
+            "sophia": 390,
+            "loshaleft": 360,
         }
     },
 ): EngineAndMatches {
