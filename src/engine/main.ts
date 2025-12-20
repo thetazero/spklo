@@ -95,6 +95,7 @@ export class Engine {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
         // Apply player seed adjustments before the match
+        // console.log(match.winner, match.loser, [...match.winner, ...match.loser], new Set([...match.winner, ...match.loser]));
         const adjustmentEvent = this.playerState.beforeMatchHook(new Set([...match.winner, ...match.loser]));
 
         // Get combined team ELOs with pairwise adjustments

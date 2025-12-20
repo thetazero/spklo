@@ -32,8 +32,13 @@ export class PlayerEloState {
     }
 
     beforeMatchHook(players: Set<PlayerName>): EloAdjustmentEvent | null {
+        let total_adjustment = 0;
+        let adj_players: Set<PlayerName> = new Set();
         for (const player of players) {
             const seedKey = player.toLowerCase();
+            if (!(player in this.elos)) {
+                console.log(`New player detected: ${player}`);
+            }
             if (!(player in this.elos) && (seedKey in this.config.seeds)) {
                 const seedElo = this.config.seeds[seedKey];
 
@@ -48,10 +53,16 @@ export class PlayerEloState {
                 this.elos[player] = seedElo;
                 console.log(`Applying seed for new player ${player}: ${seedElo}`, player in this.elos);
                 console.log(`Redistributing ${-eloDelta.toFixed(2)} each of to ${playersForRedistribution.join(", ")}`);
-                return {
-                    players: new Set(playersForRedistribution),
-                    adjustment: eloDelta,
+                total_adjustment += eloDelta;
+                for (const p of playersForRedistribution) {
+                    adj_players.add(p);
                 }
+            }
+        }
+        if (total_adjustment !== 0) {
+            return {
+                players: adj_players,
+                adjustment: total_adjustment,
             }
         }
         return null;
