@@ -36,9 +36,6 @@ export class PlayerEloState {
         let adj_players: Set<PlayerName> = new Set();
         for (const player of players) {
             const seedKey = player.toLowerCase();
-            if (!(player in this.elos)) {
-                console.log(`New player detected: ${player}`);
-            }
             if (!(player in this.elos) && (seedKey in this.config.seeds)) {
                 const seedElo = this.config.seeds[seedKey];
 
