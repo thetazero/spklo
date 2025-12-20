@@ -38,30 +38,6 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
     )
   }, [selectedPlayers, matches])
 
-  // Calculate ELO history over time
-  const eloHistory = useMemo(() => {
-    if (selectedPlayers.length === 0 || filteredMatches.length === 0) return []
-
-    if (selectedPlayers.length === 1) {
-      // Single player ELO history
-      const player = selectedPlayers[0]
-      return filteredMatches.map(match => match.beforeElos[player] || 500)
-    }
-
-    // Team ELO history (sum of individual ELOs + pairwise adjustment)
-    const [player1, player2] = selectedPlayers
-    const getPairwiseKey = (p1: PlayerName, p2: PlayerName): string => {
-      return p1 < p2 ? `${p1}:${p2}` : `${p2}:${p1}`
-    }
-    const pairKey = getPairwiseKey(player1, player2)
-
-    return filteredMatches.map(match => {
-      const elo1 = match.beforeElos[player1] || 500
-      const elo2 = match.beforeElos[player2] || 500
-      const pairwise = match.beforePairwise.get(pairKey) || 0
-      return elo1 + elo2 + pairwise
-    })
-  }, [selectedPlayers, filteredMatches])
 
   const handlePlayerSelect = (player: PlayerName, shiftKey: boolean) => {
     if (shiftKey) {
@@ -148,8 +124,8 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
       </div>
 
       {/* ELO Graph */}
-      {selectedPlayers.length > 0 && eloHistory.length > 0 && (
-        <EloGraph eloHistory={eloHistory} selectedPlayers={selectedPlayers} />
+      {selectedPlayers.length > 0 && filteredMatches.length > 0 && (
+        <EloGraph allMatches={matches} selectedPlayers={selectedPlayers} />
       )}
 
       {/* Match History */}

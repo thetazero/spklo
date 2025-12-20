@@ -1,7 +1,7 @@
 import type { Match, PlayerName } from "./types.ts";
 
 import { calculateChanges } from "./eloChanger.ts";
-import { PlayerEloState } from "./PlayerEloState.ts";
+import { PlayerEloState, type EloAdjustmentEvent } from "./PlayerEloState.ts";
 
 export interface EngineConfig {
     highK: number;
@@ -21,6 +21,7 @@ export interface MatchAnalysis {
     beforePairwise: Map<string, number>;
     winnerPairwiseDelta: number;
     loserPairwiseDelta: number;
+    adjustmentEvent: EloAdjustmentEvent | null;
 }
 
 export class Engine {
@@ -94,8 +95,7 @@ export class Engine {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
         // Apply player seed adjustments before the match
-        this.playerState.beforeMatchHook(match.winner);
-        this.playerState.beforeMatchHook(match.loser);
+        const adjustmentEvent = this.playerState.beforeMatchHook(new Set([...match.winner, ...match.loser]));
 
         // Get combined team ELOs with pairwise adjustments
         const winnerElo = this.getCombinedEloWithPairwise(match.winner);
@@ -163,6 +163,7 @@ export class Engine {
             beforePairwise,
             winnerPairwiseDelta: winnerPairwiseChange,
             loserPairwiseDelta: loserPairwiseChange,
+            adjustmentEvent,
         }
     }
 }

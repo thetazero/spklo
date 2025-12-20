@@ -8,6 +8,11 @@ export interface PlayerStateConfig {
     elligibleForEloRedistributionThresholdMatches: number;
 }
 
+export interface EloAdjustmentEvent {
+    players: Set<PlayerName>;
+    adjustment: number;
+}
+
 const initialElo = 500;
 
 
@@ -26,7 +31,7 @@ export class PlayerEloState {
         this.config = config;
     }
 
-    beforeMatchHook(players: Set<PlayerName>): void {
+    beforeMatchHook(players: Set<PlayerName>): EloAdjustmentEvent | null {
         for (const player of players) {
             const seedKey = player.toLowerCase();
             if (!(player in this.elos) && (seedKey in this.config.seeds)) {
@@ -43,8 +48,13 @@ export class PlayerEloState {
                 this.elos[player] = seedElo;
                 console.log(`Applying seed for new player ${player}: ${seedElo}`, player in this.elos);
                 console.log(`Redistributing ${-eloDelta.toFixed(2)} each of to ${playersForRedistribution.join(", ")}`);
+                return {
+                    players: new Set(playersForRedistribution),
+                    adjustment: eloDelta,
+                }
             }
         }
+        return null;
     }
 
     private playersElligibleForEloRedistribution(): PlayerName[] {

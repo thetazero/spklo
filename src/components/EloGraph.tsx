@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { PlayerName } from '../engine/types'
+import type { MatchAnalysis } from '../engine/main'
 
 interface EloGraphProps {
-  eloHistory: number[]
+  allMatches: MatchAnalysis[]
   selectedPlayers: PlayerName[]
 }
 
@@ -13,8 +14,97 @@ interface TooltipData {
   elo: number
 }
 
-export function EloGraph({ eloHistory, selectedPlayers }: EloGraphProps) {
+export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null)
+  const [showAdjusted, setShowAdjusted] = useState(true)
+
+  // Calculate both adjusted and unadjusted elo histories
+  const { adjustedHistory, unadjustedHistory } = useMemo(() => {
+    if (selectedPlayers.length === 0 || allMatches.length === 0) {
+      return { adjustedHistory: [], unadjustedHistory: [] }
+    }
+
+    if (selectedPlayers.length === 1) {
+      // Single player ELO history
+      const player = selectedPlayers[0]
+      const adjusted: number[] = []
+      const unadjusted: number[] = []
+      let cumulativeAdjustment = 0
+
+      // Filter matches for this player
+      const playerMatches = allMatches.filter(match =>
+        match.winTeam.has(player) || match.loseTeam.has(player)
+      )
+
+      // Track adjustments across ALL matches, not just player's matches
+      let matchIndex = 0
+      for (const match of allMatches) {
+        // Track cumulative adjustments for this player across all matches
+        if (match.adjustmentEvent?.players.has(player)) {
+          cumulativeAdjustment += match.adjustmentEvent.adjustment
+        }
+
+        // Only add data points for matches where the player participated
+        if (match === playerMatches[matchIndex]) {
+          const baseElo = match.beforeElos[player] || 500
+          adjusted.push(baseElo)
+          unadjusted.push(baseElo - cumulativeAdjustment)
+          matchIndex++
+        }
+      }
+
+      return { adjustedHistory: adjusted, unadjustedHistory: unadjusted }
+    }
+
+    // Team ELO history (sum of individual ELOs + pairwise adjustment)
+    const [player1, player2] = selectedPlayers
+    const getPairwiseKey = (p1: PlayerName, p2: PlayerName): string => {
+      return p1 < p2 ? `${p1}:${p2}` : `${p2}:${p1}`
+    }
+    const pairKey = getPairwiseKey(player1, player2)
+
+    const adjusted: number[] = []
+    const unadjusted: number[] = []
+    let cumulativeAdjustment1 = 0
+    let cumulativeAdjustment2 = 0
+
+    // Filter matches for this team
+    const teamMatches = allMatches.filter(match =>
+      (match.winTeam.has(player1) && match.winTeam.has(player2)) ||
+      (match.loseTeam.has(player1) && match.loseTeam.has(player2))
+    )
+
+    // Track adjustments across ALL matches, not just team's matches
+    let matchIndex = 0
+    for (const match of allMatches) {
+      // Track cumulative adjustments for each player across all matches
+      if (match.adjustmentEvent?.players.has(player1)) {
+        cumulativeAdjustment1 += match.adjustmentEvent.adjustment
+      }
+      if (match.adjustmentEvent?.players.has(player2)) {
+        cumulativeAdjustment2 += match.adjustmentEvent.adjustment
+      }
+
+      // Only add data points for matches where both players participated together
+      if (match === teamMatches[matchIndex]) {
+        const elo1 = match.beforeElos[player1] || 500
+        const elo2 = match.beforeElos[player2] || 500
+        const pairwise = match.beforePairwise.get(pairKey) || 0
+
+        adjusted.push(elo1 + elo2 + pairwise)
+
+        const unadjustedElo1 = elo1 - cumulativeAdjustment1
+        const unadjustedElo2 = elo2 - cumulativeAdjustment2
+        unadjusted.push(unadjustedElo1 + unadjustedElo2 + pairwise)
+
+        matchIndex++
+      }
+    }
+
+    return { adjustedHistory: adjusted, unadjustedHistory: unadjusted }
+  }, [selectedPlayers, allMatches])
+
+  const eloHistory = showAdjusted ? adjustedHistory : unadjustedHistory
 
   if (eloHistory.length === 0) return null
 
@@ -60,7 +150,31 @@ export function EloGraph({ eloHistory, selectedPlayers }: EloGraphProps) {
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-bold text-gray-100 mb-4">ELO Over Time For {selectedPlayers.join(', ')}</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-100">ELO Over Time For {selectedPlayers.join(', ')}</h2>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowAdjusted(true)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              showAdjusted
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+          >
+            Adjusted
+          </button>
+          <button
+            onClick={() => setShowAdjusted(false)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              !showAdjusted
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+          >
+            Unadjusted
+          </button>
+        </div>
+      </div>
       <div className="overflow-x-auto">
         <svg width={width} height={height} className="text-gray-100">
           {/* Y-axis */}
