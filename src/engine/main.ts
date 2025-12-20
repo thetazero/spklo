@@ -184,8 +184,11 @@ export function createEngine(
             "yonah": 480,
             "sophia": 440,
             "loshaleft": 240,
+            "igor": 400,
+            "tatiana": 420,
+            "andrei": 450,
         },
-        elligibleForEloRedistributionThresholdMatches: 10,
+        elligibleForEloRedistributionThresholdMatches: 20,
     },
 ): EngineAndMatches {
     const engine = new Engine(config);
