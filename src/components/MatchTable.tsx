@@ -21,7 +21,7 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
   const currentMatches = reversedMatches.slice(startIdx, endIdx)
 
   const getPlayerElo = (player: PlayerName, analysis: MatchAnalysis): number => {
-    return analysis.beforeElos[player] || 1000
+    return analysis.beforeElos[player] || 500
   }
 
   const formatPercent = (value: number): string => {
@@ -79,8 +79,8 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
 
               // Determine elo delta based on which team won
               const teamAWon = teamA === analysis.winTeam
-              const teamAPairwiseDelta = teamAWon ? analysis.winnerPairwiseDelta : -analysis.loserPairwiseDelta
-              const teamBPairwiseDelta = teamAWon ? -analysis.winnerPairwiseDelta : analysis.loserPairwiseDelta
+              const teamAPairwiseDelta = teamAWon ? analysis.winnerPairwiseDelta : analysis.loserPairwiseDelta
+              const teamBPairwiseDelta = teamAWon ? analysis.loserPairwiseDelta : analysis.winnerPairwiseDelta
 
               // Win probability is always from winner's perspective, adjust if swapped
               const winProbability = shouldSwap ? 1 - analysis.expectedWinProbability : analysis.expectedWinProbability
