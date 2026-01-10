@@ -6,6 +6,8 @@ import { PlayerEloState, type EloAdjustmentEvent } from "./PlayerEloState.ts";
 export interface EngineConfig {
     highK: number;
     normalK: number;
+    seededK: number; // k after being elo seeded
+    seededMatchCount: number; // number of matches to consider a player as "seeded"
     highKMatchCount: number;
     pairwiseFactor: number;
     elligibleForEloRedistributionThresholdMatches: number;
@@ -35,9 +37,11 @@ export class Engine {
         this.config = config;
         this.playerState = new PlayerEloState({
             seeds: config.initialSeeds,
-            highK: config.highK,
             normalK: config.normalK,
+            highK: config.highK,
             highKMatchCount: config.highKMatchCount,
+            seededK: config.seededK,
+            seededMatchCount: config.seededMatchCount,
             elligibleForEloRedistributionThresholdMatches: config.elligibleForEloRedistributionThresholdMatches,
         });
         this.bceLoss = 0;
@@ -176,8 +180,10 @@ export interface EngineAndMatches {
 export function createEngine(
     matches: Match[],
     config: EngineConfig = {
+        normalK: 4.0,
+        seededK: 14.0,
+        seededMatchCount: 10,
         highK: 128,
-        normalK: 4,
         highKMatchCount: 4,
         pairwiseFactor: 1.0,
         initialSeeds: {

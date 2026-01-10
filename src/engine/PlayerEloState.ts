@@ -4,7 +4,9 @@ export interface PlayerStateConfig {
     seeds: { [key in PlayerName]: number };
     highK: number;
     normalK: number;
+    seededK: number;
     highKMatchCount: number;
+    seededMatchCount: number;
     elligibleForEloRedistributionThresholdMatches: number;
 }
 
@@ -93,9 +95,10 @@ export class PlayerEloState {
     }
 
     getKFactor(player: PlayerName): number {
+        const matchCount = this.getMatchCount(player);
         if (player.toLocaleLowerCase() in this.config.seeds) {
-            return this.config.normalK;
+            return matchCount < this.config.seededMatchCount ? this.config.seededK : this.config.normalK;
         }
-        return this.getMatchCount(player) < this.config.highKMatchCount ? this.config.highK : this.config.normalK;
+        return matchCount < this.config.highKMatchCount ? this.config.highK : this.config.normalK;
     }
 }
