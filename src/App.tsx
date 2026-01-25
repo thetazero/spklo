@@ -7,6 +7,7 @@ import { MatchesPage } from './pages/Matches'
 import { PlayersPage } from './pages/Players'
 import { StatsPage } from './pages/Stats'
 import { DetailsPage } from './pages/Details'
+import { BalancedTeamPage } from './pages/BalancedTeam'
 import { DatasetSelector } from './components/DatasetSelector'
 
 function App() {
@@ -74,6 +75,11 @@ function App() {
                 </Link>
               </li>
               <li>
+                <Link to="balanced" className="inline-block px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
+                  Balanced
+                </Link>
+              </li>
+              <li>
                 <Link to="stats" className="inline-block px-3 py-2 sm:px-4 bg-gray-800 hover:bg-gray-700 rounded text-gray-100 text-sm sm:text-base">
                   Stats
                 </Link>
@@ -87,6 +93,7 @@ function App() {
             <Route path="players" element={<PlayersPage engine={engineData.engine} />} />
             <Route path="teams" element={<TeamsPage engine={engineData.engine} />} />
             <Route path="matches" element={<MatchesPage matches={engineData.analyzedMatches} />} />
+            <Route path="balanced" element={<BalancedTeamPage engine={engineData.engine} />} />
             <Route path="stats" element={<StatsPage totalMatches={engineData.analyzedMatches.length} bceLoss={engineData.engine.bceLoss} matches={engineData.analyzedMatches} />} />
           </Routes>
         </div>
