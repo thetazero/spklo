@@ -53,6 +53,16 @@ export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
         }
       }
 
+      // Add final data point showing elo after the last match
+      if (playerMatches.length > 0) {
+        const lastMatch = playerMatches[playerMatches.length - 1]
+        const lastBeforeElo = lastMatch.beforeElos[player] || 500
+        const lastEloChange = lastMatch.eloChanges.get(player) || 0
+        const finalElo = lastBeforeElo + lastEloChange
+        adjusted.push(finalElo)
+        unadjusted.push(finalElo - cumulativeAdjustment)
+      }
+
       return { adjustedHistory: adjusted, unadjustedHistory: unadjusted }
     }
 
@@ -99,6 +109,26 @@ export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
 
         matchIndex++
       }
+    }
+
+    // Add final data point showing elo after the last match
+    if (teamMatches.length > 0) {
+      const lastMatch = teamMatches[teamMatches.length - 1]
+      const lastElo1 = lastMatch.beforeElos[player1] || 500
+      const lastElo2 = lastMatch.beforeElos[player2] || 500
+      const lastPairwise = lastMatch.beforePairwise.get(pairKey) || 0
+      const eloChange1 = lastMatch.eloChanges.get(player1) || 0
+      const eloChange2 = lastMatch.eloChanges.get(player2) || 0
+      const pairwiseDelta = lastMatch.winTeam.has(player1) && lastMatch.winTeam.has(player2)
+        ? lastMatch.winnerPairwiseDelta
+        : lastMatch.loserPairwiseDelta
+
+      const finalElo1 = lastElo1 + eloChange1
+      const finalElo2 = lastElo2 + eloChange2
+      const finalPairwise = lastPairwise + pairwiseDelta
+
+      adjusted.push(finalElo1 + finalElo2 + finalPairwise)
+      unadjusted.push((finalElo1 - cumulativeAdjustment1) + (finalElo2 - cumulativeAdjustment2) + finalPairwise)
     }
 
     return { adjustedHistory: adjusted, unadjustedHistory: unadjusted }
