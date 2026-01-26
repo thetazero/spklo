@@ -180,16 +180,16 @@ export interface EngineAndMatches {
 export function createEngine(
     matches: Match[],
     config: EngineConfig = {
-        normalK: 4.0,
+        normalK: 10.0,
         seededK: 14.0,
         seededMatchCount: 10,
-        highK: 128,
-        highKMatchCount: 4,
-        pairwiseFactor: 1.0,
+        highK: 80,
+        highKMatchCount: 10,
+        pairwiseFactor: 0.6,
         initialSeeds: {
-            "katie": 160,
-            "yonah": 480,
-            "sophia": 440,
+            // "katie": 160,
+            // "yonah": 480,
+            // "sophia": 440,
             "loshaleft": 240,
             "igor": 400,
             "tatiana": 420,
