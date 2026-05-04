@@ -7,7 +7,7 @@ const old_names_map: { [key: string]: PlayerName } = {
   i: "August",
   n: "Neel",
   s: "Simon",
-  g: "Guarov",
+  g: "Gaurav",
   e: "UnknownE",
 }
 
@@ -17,7 +17,7 @@ const new_names_map: { [key: string]: PlayerName } = {
   august: "August",
   neel: "Neel",
   simon: "Simon",
-  guarov: "Guarov",
+  gaurav: "Gaurav",
   katie: "Katie",
 }
 
