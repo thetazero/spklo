@@ -65,13 +65,6 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
     return engine.getMatchCount(player)
   }
 
-  const getPairwiseAdjustment = (): number => {
-    if (selectedPlayers.length === 2) {
-      return engine.getPairwiseAdjustment(selectedPlayers[0], selectedPlayers[1])
-    }
-    return 0
-  }
-
   const getPairMatchCount = (): number => {
     if (selectedPlayers.length === 2) {
       return engine.getPairMatchCount(selectedPlayers[0], selectedPlayers[1])
@@ -82,7 +75,7 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
   const getTotalElo = (): number => {
     if (selectedPlayers.length === 0) return 0
     if (selectedPlayers.length === 1) return getPlayerElo(selectedPlayers[0])
-    return selectedPlayers.reduce((sum, p) => sum + getPlayerElo(p), 0) + getPairwiseAdjustment()
+    return selectedPlayers.reduce((sum, p) => sum + getPlayerElo(p), 0)
   }
 
   return (
@@ -116,7 +109,6 @@ export function PlayerOrTeamDetails({ engine, matches }: PlayerOrTeamDetailsProp
               elo: getPlayerElo(selectedPlayers[1]),
               matchCount: getMatchCount(selectedPlayers[1])
             }}
-            pairwiseAdjustment={getPairwiseAdjustment()}
             pairMatchCount={getPairMatchCount()}
             totalElo={getTotalElo()}
           />

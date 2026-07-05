@@ -40,8 +40,8 @@ function findAllMatchups(players: PlayerName[], engine: Engine): MatchupResult[]
       // Skip if teams share a player
       if (team1.some(p => team2.includes(p))) continue
 
-      const team1Elo = engine.getCombinedEloWithPairwise(new Set(team1))
-      const team2Elo = engine.getCombinedEloWithPairwise(new Set(team2))
+      const team1Elo = engine.getCombinedElo(new Set(team1))
+      const team2Elo = engine.getCombinedElo(new Set(team2))
       matchups.push({
         team1,
         team2,
@@ -61,9 +61,8 @@ function buildTeamCardProps(team: [PlayerName, PlayerName], engine: Engine) {
   return {
     player1: { name: p1, elo: engine.getElo(p1), matchCount: engine.getMatchCount(p1) },
     player2: { name: p2, elo: engine.getElo(p2), matchCount: engine.getMatchCount(p2) },
-    pairwiseAdjustment: engine.getPairwiseAdjustment(p1, p2),
     pairMatchCount: engine.getPairMatchCount(p1, p2),
-    totalElo: engine.getCombinedEloWithPairwise(new Set(team))
+    totalElo: engine.getCombinedElo(new Set(team))
   }
 }
 

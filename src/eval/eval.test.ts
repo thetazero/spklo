@@ -26,6 +26,7 @@ import type { MatchAnalysis } from '../engine/main'
 
 const dataset = (process.env.EVAL_DATASET as EvalDataset) || 'both'
 const splitRatio = process.env.EVAL_SPLIT ? Number(process.env.EVAL_SPLIT) : 0.8
+const minGames = process.env.EVAL_MIN_GAMES ? Number(process.env.EVAL_MIN_GAMES) : 0
 const refresh = process.env.EVAL_REFRESH === '1'
 
 let matches: Match[]
@@ -38,10 +39,10 @@ beforeAll(async () => {
 
 describe('eval report', () => {
   it('prints the baseline train/test report and the config leaderboard', () => {
-    const report = runSplitEval(matches, baseline.config, splitRatio, baseline.name)
+    const report = runSplitEval(matches, baseline.config, splitRatio, baseline.name, minGames)
     console.log('\n' + formatReport(report, true))
 
-    const leaderboard = compareConfigs(matches, candidates, splitRatio)
+    const leaderboard = compareConfigs(matches, candidates, splitRatio, minGames)
     console.log('\n' + formatComparison(leaderboard) + '\n')
 
     // Sanity: the held-out slice is non-empty and metrics are finite.
