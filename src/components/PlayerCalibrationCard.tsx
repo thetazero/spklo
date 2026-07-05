@@ -1,70 +1,17 @@
 import type { MatchAnalysis } from '../engine/main'
-import type { PlayerName } from '../engine/types'
+import {
+  computePlayerStats,
+  computeRelativeDifference,
+  formatRelativeDiff,
+} from '../eval/metrics'
 import { Table } from './Table'
-
-interface PlayerStats {
-  player: PlayerName
-  expectedWins: number
-  actualWins: number
-  totalMatches: number
-}
 
 interface PlayerCalibrationCardProps {
   matches: MatchAnalysis[]
 }
 
-function calculatePlayerStats(matches: MatchAnalysis[]): PlayerStats[] {
-  const playerData = new Map<PlayerName, { expectedWins: number; actualWins: number; totalMatches: number }>()
-
-  for (const match of matches) {
-    const winnerPlayers = Array.from(match.winTeam)
-    const loserPlayers = Array.from(match.loseTeam)
-
-    // Update winning team
-    for (const player of winnerPlayers) {
-      if (!playerData.has(player)) {
-        playerData.set(player, { expectedWins: 0, actualWins: 0, totalMatches: 0 })
-      }
-      const data = playerData.get(player)!
-      data.expectedWins += match.expectedWinProbability
-      data.actualWins += 1
-      data.totalMatches += 1
-    }
-
-    // Update losing team
-    for (const player of loserPlayers) {
-      if (!playerData.has(player)) {
-        playerData.set(player, { expectedWins: 0, actualWins: 0, totalMatches: 0 })
-      }
-      const data = playerData.get(player)!
-      data.expectedWins += (1 - match.expectedWinProbability)
-      data.actualWins += 0
-      data.totalMatches += 1
-    }
-  }
-
-  // Convert to array and sort by player name
-  return Array.from(playerData.entries())
-    .map(([player, data]) => ({
-      player,
-      expectedWins: data.expectedWins,
-      actualWins: data.actualWins,
-      totalMatches: data.totalMatches
-    }))
-    .sort((a, b) => a.player.localeCompare(b.player))
-    .filter(stats => stats.totalMatches > 5);
-}
-
-function computeRelativeDifference(expected: number, actual: number): number {
-  return expected > 0 ? (expected - actual) / actual * 100 : 0
-}
-
-function formatRelativeDiff(diff: number): string {
-  return diff > 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`
-}
-
 export function PlayerCalibrationCard({ matches }: PlayerCalibrationCardProps) {
-  const playerStats = calculatePlayerStats(matches)
+  const playerStats = computePlayerStats(matches)
 
   const columns = [
     { header: 'Player', type: 'string' as const },
@@ -78,7 +25,7 @@ export function PlayerCalibrationCard({ matches }: PlayerCalibrationCardProps) {
     const relativeDifference = computeRelativeDifference(stats.expectedWins, stats.actualWins)
 
     // Color based on which CI the expected wins fall into
-    let diffColor = 'text-gray-400'
+    const diffColor = 'text-gray-400'
 
     return [
       {

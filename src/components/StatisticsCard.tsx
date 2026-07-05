@@ -1,3 +1,6 @@
+import type { SummaryStats } from '../eval/metrics'
+import { BASELINE_LOG_LOSS } from '../eval/metrics'
+
 interface StatisticItemProps {
   label: string
   value: string | number
@@ -13,21 +16,24 @@ function StatisticItem({ label, value }: StatisticItemProps) {
 }
 
 interface StatisticsCardProps {
-  totalMatches: number
-  bceLoss: number
+  summary: SummaryStats
 }
 
-export function StatisticsCard({ totalMatches, bceLoss }: StatisticsCardProps) {
-  const averageBceLoss = totalMatches > 0 ? bceLoss / totalMatches : 0
-  const impliedWinProbability = totalMatches > 0 ? Math.exp(-averageBceLoss) : 0
-
+export function StatisticsCard({ summary }: StatisticsCardProps) {
   return (
     <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatisticItem label="Total Matches" value={totalMatches} />
-        <StatisticItem label="Total BCE Loss" value={bceLoss.toFixed(2)} />
-        <StatisticItem label="Average BCE Loss" value={averageBceLoss.toFixed(4)} />
-        <StatisticItem label="Implied Win Probability" value={`${(impliedWinProbability * 100).toFixed(3)}%`} />
+        <StatisticItem label="Total Matches" value={summary.totalMatches} />
+        <StatisticItem label="Total BCE Loss" value={summary.totalLogLoss.toFixed(2)} />
+        <StatisticItem label="Average BCE Loss" value={summary.avgLogLoss.toFixed(4)} />
+        <StatisticItem label="Implied Win Probability" value={`${(summary.impliedWinProbability * 100).toFixed(3)}%`} />
+        <StatisticItem label="Accuracy" value={`${(summary.accuracy * 100).toFixed(1)}%`} />
+        <StatisticItem label="Brier Score" value={summary.brier.toFixed(4)} />
+        <StatisticItem label="Calibration Error" value={`${(summary.ece * 100).toFixed(2)}%`} />
+        <StatisticItem label="Skill vs Coin Flip" value={`${(summary.skillScore * 100).toFixed(1)}%`} />
+      </div>
+      <div className="text-xs text-gray-500 mt-3">
+        Baseline (coin-flip) log loss: {BASELINE_LOG_LOSS.toFixed(4)}. Skill = 1 − avg loss / baseline.
       </div>
     </div>
   )

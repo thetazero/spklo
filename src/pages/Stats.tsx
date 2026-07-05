@@ -2,17 +2,17 @@ import { StatisticsCard } from '../components/StatisticsCard'
 import { CalibrationCard } from '../components/CalibrationCard'
 import { PlayerCalibrationCard } from '../components/PlayerCalibrationCard'
 import type { MatchAnalysis } from '../engine/main'
+import { computeSummaryStats } from '../eval/metrics'
 
 interface StatsPageProps {
-  totalMatches: number
-  bceLoss: number
   matches: MatchAnalysis[]
 }
 
-export function StatsPage({ totalMatches, bceLoss, matches }: StatsPageProps) {
+export function StatsPage({ matches }: StatsPageProps) {
+  const summary = computeSummaryStats(matches)
   return (
     <div className="space-y-6">
-      <StatisticsCard totalMatches={totalMatches} bceLoss={bceLoss} />
+      <StatisticsCard summary={summary} />
       <CalibrationCard matches={matches} numBuckets={5} />
       <PlayerCalibrationCard matches={matches} />
     </div>

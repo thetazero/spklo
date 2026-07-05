@@ -35,7 +35,7 @@ export class PlayerEloState {
 
     beforeMatchHook(players: Set<PlayerName>): EloAdjustmentEvent | null {
         let total_adjustment = 0;
-        let adj_players: Set<PlayerName> = new Set();
+        const adj_players: Set<PlayerName> = new Set();
         for (const player of players) {
             const seedKey = player.toLowerCase();
             if (!(player in this.elos) && (seedKey in this.config.seeds)) {

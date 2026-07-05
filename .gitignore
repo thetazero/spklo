@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Cached snapshot of the live match sheet used by the offline eval
+src/data/.eval-cache.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

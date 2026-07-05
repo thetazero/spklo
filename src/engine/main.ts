@@ -177,26 +177,28 @@ export interface EngineAndMatches {
     analyzedMatches: MatchAnalysis[];
 }
 
+export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
+    normalK: 10.0,
+    seededK: 14.0,
+    seededMatchCount: 10,
+    highK: 80,
+    highKMatchCount: 10,
+    pairwiseFactor: 0.6,
+    initialSeeds: {
+        // "katie": 160,
+        // "yonah": 480,
+        // "sophia": 440,
+        "loshaleft": 240,
+        "igor": 400,
+        "tatiana": 420,
+        "andrei": 450,
+    },
+    elligibleForEloRedistributionThresholdMatches: 20,
+};
+
 export function createEngine(
     matches: Match[],
-    config: EngineConfig = {
-        normalK: 10.0,
-        seededK: 14.0,
-        seededMatchCount: 10,
-        highK: 80,
-        highKMatchCount: 10,
-        pairwiseFactor: 0.6,
-        initialSeeds: {
-            // "katie": 160,
-            // "yonah": 480,
-            // "sophia": 440,
-            "loshaleft": 240,
-            "igor": 400,
-            "tatiana": 420,
-            "andrei": 450,
-        },
-        elligibleForEloRedistributionThresholdMatches: 20,
-    },
+    config: EngineConfig = DEFAULT_ENGINE_CONFIG,
 ): EngineAndMatches {
     const engine = new Engine(config);
     const analyzed_matches: MatchAnalysis[] = [];

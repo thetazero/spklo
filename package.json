@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "eval": "vitest run src/eval/eval.test.ts",
+    "eval:refresh": "EVAL_REFRESH=1 vitest run src/eval/eval.test.ts",
+    "eval:watch": "vitest src/eval/eval.test.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17",

@@ -21,7 +21,7 @@ const new_names_map: { [key: string]: PlayerName } = {
   katie: "Katie",
 }
 
-const str_to_player: (player_str: string) => PlayerName = (player_str: string) => {
+export const str_to_player: (player_str: string) => PlayerName = (player_str: string) => {
     player_str = player_str.trim().toLowerCase();
     if (player_str.length === 1) {
         const player_name = old_names_map[player_str];
@@ -40,9 +40,8 @@ const str_to_player: (player_str: string) => PlayerName = (player_str: string) =
     return player_str.charAt(0).toUpperCase() + player_str.slice(1);
 }
 
-export async function loadMatches(path: string): Promise<Match[]> {
-    const response = await fetch(path);
-    const data = await response.json();
+// Pure parsers (no I/O) so the same logic can be reused from Node eval scripts.
+export function parseMatchesJson(data: { win: string; lose: string }[]): Match[] {
     const matches: Match[] = [];
     for (const match_data of data) {
         const winner1 = str_to_player(match_data.win[0]);
@@ -58,9 +57,7 @@ export async function loadMatches(path: string): Promise<Match[]> {
     return matches;
 }
 
-export async function loadMatchesCSV(path: string): Promise<Match[]> {
-    const response = await fetch(path);
-    const text = await response.text();
+export function parseMatchesCsv(text: string): Match[] {
     const lines = text.split('\n').filter(line => line.trim() !== '');
     const matches: Match[] = [];
     for (const line of lines.slice(1)) {
@@ -76,6 +73,18 @@ export async function loadMatchesCSV(path: string): Promise<Match[]> {
         matches.push(match);
     }
     return matches;
+}
+
+export async function loadMatches(path: string): Promise<Match[]> {
+    const response = await fetch(path);
+    const data = await response.json();
+    return parseMatchesJson(data);
+}
+
+export async function loadMatchesCSV(path: string): Promise<Match[]> {
+    const response = await fetch(path);
+    const text = await response.text();
+    return parseMatchesCsv(text);
 }
 
 export const new_matches_url: string = "https://docs.google.com/spreadsheets/d/12Q0joMcjaMmQGTLQqQvgViH1341V9WDD1Yr7JmdI8oU/export?gid=0&format=csv"
