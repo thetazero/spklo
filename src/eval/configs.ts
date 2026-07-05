@@ -2,11 +2,14 @@ import { DEFAULT_ENGINE_CONFIG, type EngineConfig } from '../engine/main'
 import type { NamedConfig } from './harness'
 
 /**
- * Configs to evaluate. Tune with the experience filter, which strips out
- * unconverged-rating noise (matches hinging on a player with few prior games):
- *   EVAL_MIN_GAMES=6 npm run eval
- *   EVAL_MIN_GAMES=6 npx vitest run src/eval/multisplit.test.ts   (robust mean)
- * Then promote the winner into DEFAULT_ENGINE_CONFIG in src/engine/main.ts.
+ * Configs to evaluate.
+ *   npm run eval                              (single 80/20 split, full report)
+ *   npx vitest run src/eval/multisplit.test.ts  (robust mean over splits)
+ * Both apply the experience filter by default (EVAL_MIN_GAMES=5) — they score
+ * only matches where every player already had >=5 prior games, so tuning is not
+ * dominated by unconverged-rating noise. Override with EVAL_MIN_GAMES=0 to score
+ * everything. Then promote the winner into DEFAULT_ENGINE_CONFIG in
+ * src/engine/main.ts.
  */
 
 export const baseline: NamedConfig = {

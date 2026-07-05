@@ -10,7 +10,7 @@ import { candidates } from './configs'
  * a real improvement. Run: npx vitest run src/eval/multisplit.test.ts
  */
 const SPLITS = [0.7, 0.75, 0.8, 0.85]
-const minGames = process.env.EVAL_MIN_GAMES ? Number(process.env.EVAL_MIN_GAMES) : 0
+const minGames = process.env.EVAL_MIN_GAMES ? Number(process.env.EVAL_MIN_GAMES) : 5
 
 let matches: Match[]
 beforeAll(async () => {

@@ -26,7 +26,9 @@ import type { MatchAnalysis } from '../engine/main'
 
 const dataset = (process.env.EVAL_DATASET as EvalDataset) || 'both'
 const splitRatio = process.env.EVAL_SPLIT ? Number(process.env.EVAL_SPLIT) : 0.8
-const minGames = process.env.EVAL_MIN_GAMES ? Number(process.env.EVAL_MIN_GAMES) : 0
+// Default to 5: score only matches where every player already had >=5 prior
+// games. Unfiltered, the held-out set is mostly unconverged-rating noise.
+const minGames = process.env.EVAL_MIN_GAMES ? Number(process.env.EVAL_MIN_GAMES) : 5
 const refresh = process.env.EVAL_REFRESH === '1'
 
 let matches: Match[]
