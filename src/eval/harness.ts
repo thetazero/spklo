@@ -20,12 +20,34 @@ export interface EvalReport {
   splitRatio: number
   splitIndex: number
   totalMatches: number
+  /** Experience filter: a match is only *scored* if every player had at least
+   * this many games before it. 0 = score everything. The model still trains on
+   * every match regardless — this only changes which matches count toward metrics. */
+  minGames: number
+  /** How many matches actually got scored after the experience filter. */
+  scoredTrain: number
+  scoredTest: number
   /** Metrics over the first `splitRatio` of matches (the tuning/warm-up set). */
   train: SplitMetrics
   /** Metrics over the held-out last `1 - splitRatio` of matches. Optimize this. */
   test: SplitMetrics
   /** Metrics over the full dataset (what the live Stats page currently shows). */
   overall: SplitMetrics
+}
+
+/**
+ * For each match, the fewest prior games any of its four players had going in
+ * (prequential). A match with a debutant scores 0. Config-independent, so it is
+ * computed once from the raw match order.
+ */
+export function computeMinPriorGames(matches: Match[]): number[] {
+  const seen = new Map<string, number>()
+  return matches.map(m => {
+    const players = [...m.winner, ...m.loser]
+    const minPrior = Math.min(...players.map(p => seen.get(p) ?? 0))
+    for (const p of players) seen.set(p, (seen.get(p) ?? 0) + 1)
+    return minPrior
+  })
 }
 
 function metricsFor(matches: MatchAnalysis[]): SplitMetrics {
@@ -50,6 +72,7 @@ export function runSplitEval(
   config: EngineConfig,
   splitRatio = 0.8,
   name = 'model',
+  minGames = 0,
 ): EvalReport {
   const engine = new Engine(config)
   // The engine emits per-seed debug lines via console.log; silence them for the
@@ -64,17 +87,27 @@ export function runSplitEval(
   }
 
   const splitIndex = Math.floor(matches.length * splitRatio)
-  const trainMatches = analyzed.slice(0, splitIndex)
-  const testMatches = analyzed.slice(splitIndex)
+  // Score only matches where every player already had >= minGames prior games.
+  // The model still learned from all of them; we just don't grade the ones whose
+  // ratings hadn't converged (debuts, near-debuts) — that's rating noise, not skill.
+  const minPrior = computeMinPriorGames(matches)
+  const scored = (i: number) => minPrior[i] >= minGames
+
+  const trainMatches = analyzed.filter((_, i) => i < splitIndex && scored(i))
+  const testMatches = analyzed.filter((_, i) => i >= splitIndex && scored(i))
+  const overallMatches = minGames > 0 ? analyzed.filter((_, i) => scored(i)) : analyzed
 
   return {
     name,
     splitRatio,
     splitIndex,
     totalMatches: matches.length,
+    minGames,
+    scoredTrain: trainMatches.length,
+    scoredTest: testMatches.length,
     train: metricsFor(trainMatches),
     test: metricsFor(testMatches),
-    overall: metricsFor(analyzed),
+    overall: metricsFor(overallMatches),
   }
 }
 
@@ -88,8 +121,9 @@ export function compareConfigs(
   matches: Match[],
   configs: NamedConfig[],
   splitRatio = 0.8,
+  minGames = 0,
 ): EvalReport[] {
   return configs
-    .map(({ name, config }) => runSplitEval(matches, config, splitRatio, name))
+    .map(({ name, config }) => runSplitEval(matches, config, splitRatio, name, minGames))
     .sort((a, b) => a.test.summary.avgLogLoss - b.test.summary.avgLogLoss)
 }

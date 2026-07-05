@@ -28,10 +28,6 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
     return `${(value * 100).toFixed(1)}%`
   }
 
-  const getPairwiseKey = (player1: PlayerName, player2: PlayerName): string => {
-    return player1 < player2 ? `${player1}:${player2}` : `${player2}:${player1}`
-  }
-
   // Check if selected players are in a team
   const isSelectedTeam = (team: Set<PlayerName>): boolean => {
     if (selectedPlayers.length === 0) return false
@@ -72,16 +68,6 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
               const [teamA1, teamA2] = Array.from(teamA)
               const [teamB1, teamB2] = Array.from(teamB)
 
-              const teamAKey = getPairwiseKey(teamA1, teamA2)
-              const teamBKey = getPairwiseKey(teamB1, teamB2)
-              const teamAPairwiseBefore = analysis.beforePairwise.get(teamAKey) || 0
-              const teamBPairwiseBefore = analysis.beforePairwise.get(teamBKey) || 0
-
-              // Determine elo delta based on which team won
-              const teamAWon = teamA === analysis.winTeam
-              const teamAPairwiseDelta = teamAWon ? analysis.winnerPairwiseDelta : analysis.loserPairwiseDelta
-              const teamBPairwiseDelta = teamAWon ? analysis.loserPairwiseDelta : analysis.winnerPairwiseDelta
-
               // Win probability is always from winner's perspective, adjust if swapped
               const winProbability = shouldSwap ? 1 - analysis.expectedWinProbability : analysis.expectedWinProbability
 
@@ -104,8 +90,6 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
                         { name: teamA1, elo: getPlayerElo(teamA1, analysis), eloDelta: a1EloDelta },
                         { name: teamA2, elo: getPlayerElo(teamA2, analysis), eloDelta: a2EloDelta }
                       ]}
-                      pairwiseAdjustment={teamAPairwiseBefore}
-                      pairwiseDelta={teamAPairwiseDelta}
                       showTotal={true}
                     />
                   </td>
@@ -115,8 +99,6 @@ export function MatchTable({ matches, selectedPlayers = [] }: MatchTableProps) {
                         { name: teamB1, elo: getPlayerElo(teamB1, analysis), eloDelta: b1EloDelta },
                         { name: teamB2, elo: getPlayerElo(teamB2, analysis), eloDelta: b2EloDelta }
                       ]}
-                      pairwiseAdjustment={teamBPairwiseBefore}
-                      pairwiseDelta={teamBPairwiseDelta}
                       showTotal={true}
                     />
                   </td>

@@ -52,10 +52,15 @@ function splitBlock(title: string, split: SplitMetrics, verbose: boolean): strin
 /** Full human-readable report for a single config, train vs. held-out test. */
 export function formatReport(report: EvalReport, verbose = true): string {
   const heldOut = report.totalMatches - report.splitIndex
+  const filterLine = report.minGames > 0
+    ? `  experience filter: only scoring matches where every player had ≥ ${report.minGames} prior games`
+      + `  →  train ${report.scoredTrain} / test ${report.scoredTest} scored`
+    : null
   const header = [
     '='.repeat(64),
     `  ${report.name}`,
     `  split ${pct(report.splitRatio, 0)} → train ${report.splitIndex} / test ${heldOut} of ${report.totalMatches} matches`,
+    ...(filterLine ? [filterLine] : []),
     '='.repeat(64),
   ]
   return [

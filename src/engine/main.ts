@@ -7,7 +7,6 @@ export interface EngineConfig {
     highK: number;
     normalK: number;
     highKMatchCount: number;
-    pairwiseFactor: number;
 }
 
 export interface MatchAnalysis {
@@ -16,15 +15,13 @@ export interface MatchAnalysis {
     winTeam: Set<PlayerName>;
     loseTeam: Set<PlayerName>;
     beforeElos: { [key in PlayerName]: number };
-    beforePairwise: Map<string, number>;
-    winnerPairwiseDelta: number;
-    loserPairwiseDelta: number;
 }
 
 export class Engine {
     playerState: PlayerEloState;
     bceLoss: number;
-    pairwiseAdjustments: Map<string, number>;
+    // How many matches each teammate pair has played together. Not a rating
+    // input — just co-occurrence, used by the Teams UI.
     pairMatchCounts: Map<string, number>;
     config: EngineConfig;
 
@@ -36,7 +33,6 @@ export class Engine {
             highKMatchCount: config.highKMatchCount,
         });
         this.bceLoss = 0;
-        this.pairwiseAdjustments = new Map();
         this.pairMatchCounts = new Map();
     }
 
@@ -52,36 +48,16 @@ export class Engine {
         return this.playerState.getKFactor(player);
     }
 
-    getPairwiseKey(player1: PlayerName, player2: PlayerName): string {
+    getPairKey(player1: PlayerName, player2: PlayerName): string {
         return player1 < player2 ? `${player1}:${player2}` : `${player2}:${player1}`;
     }
 
-    getPairwiseAdjustment(player1: PlayerName, player2: PlayerName): number {
-        return this.pairwiseAdjustments.get(this.getPairwiseKey(player1, player2)) || 0;
-    }
-
     getPairMatchCount(player1: PlayerName, player2: PlayerName): number {
-        return this.pairMatchCounts.get(this.getPairwiseKey(player1, player2)) || 0;
-    }
-
-    getPairwiseK(player1: PlayerName, player2: PlayerName): number {
-        return (this.getKFactor(player1) + this.getKFactor(player2))/2 * this.config.pairwiseFactor;
+        return this.pairMatchCounts.get(this.getPairKey(player1, player2)) || 0;
     }
 
     getCombinedElo(players: Set<PlayerName>): number {
         return Array.from(players).reduce((sum, player) => sum + this.getElo(player), 0);
-    }
-
-    getCombinedEloWithPairwise(team: Set<PlayerName>): number {
-        let totalElo = this.getCombinedElo(team);
-
-        // Add pairwise adjustment for the teammate pair (exactly 2 players)
-        if (this.config.pairwiseFactor > 0) {
-            const [player1, player2] = Array.from(team);
-            totalElo += this.getPairwiseAdjustment(player1, player2);
-        }
-
-        return totalElo;
     }
 
     analyzeMatch(match: Match): MatchAnalysis {
@@ -89,26 +65,20 @@ export class Engine {
         if (match.winner.size !== 2 || match.loser.size !== 2) {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
-        // Get combined team ELOs with pairwise adjustments
-        const winnerElo = this.getCombinedEloWithPairwise(match.winner);
-        const loserElo = this.getCombinedEloWithPairwise(match.loser);
+        // Combined team ELOs = sum of the two players' ratings.
+        const winnerElo = this.getCombinedElo(match.winner);
+        const loserElo = this.getCombinedElo(match.loser);
 
         const [winner1, winner2] = Array.from(match.winner);
         const [loser1, loser2] = Array.from(match.loser);
 
         // Calculate Elo changes using EloChanger
-        const {
-            playerChanges,
-            expectedWinProbability,
-            winnerPairwiseChange,
-            loserPairwiseChange
-        } = calculateChanges(
+        const { playerChanges, expectedWinProbability } = calculateChanges(
             match.winner,
             match.loser,
             winnerElo,
             loserElo,
             (player) => this.getKFactor(player),
-            (players) => this.getPairwiseK(players[0], players[1])
         );
 
         // Update BCE loss: -log(p) where p is the predicted probability of the actual outcome
@@ -123,28 +93,17 @@ export class Engine {
             beforeElos[player] = this.getElo(player);
         }
 
-        const beforePairwise = new Map<string, number>();
-        const winnerKey = this.getPairwiseKey(winner1, winner2);
-        const loserKey = this.getPairwiseKey(loser1, loser2);
-        beforePairwise.set(winnerKey, this.getPairwiseAdjustment(winner1, winner2));
-        beforePairwise.set(loserKey, this.getPairwiseAdjustment(loser1, loser2));
-
         // Apply Elo changes and update match counts
         for (const [player, change] of playerChanges) {
             this.playerState.addElo(player, change);
             this.playerState.incrementMatchCount(player);
         }
 
-        // Update pairwise adjustments and match counts for teammate pairs using calculated changes
-        const winnerCurrentAdj = this.getPairwiseAdjustment(winner1, winner2);
-        const winnerPairCount = this.getPairMatchCount(winner1, winner2);
-        this.pairwiseAdjustments.set(winnerKey, winnerCurrentAdj + winnerPairwiseChange);
-        this.pairMatchCounts.set(winnerKey, winnerPairCount + 1);
-
-        const loserCurrentAdj = this.getPairwiseAdjustment(loser1, loser2);
-        const loserPairCount = this.getPairMatchCount(loser1, loser2);
-        this.pairwiseAdjustments.set(loserKey, loserCurrentAdj + loserPairwiseChange);
-        this.pairMatchCounts.set(loserKey, loserPairCount + 1);
+        // Track how often each teammate pair has played together (Teams UI stat).
+        const winnerKey = this.getPairKey(winner1, winner2);
+        const loserKey = this.getPairKey(loser1, loser2);
+        this.pairMatchCounts.set(winnerKey, (this.pairMatchCounts.get(winnerKey) || 0) + 1);
+        this.pairMatchCounts.set(loserKey, (this.pairMatchCounts.get(loserKey) || 0) + 1);
 
         return {
             eloChanges: playerChanges,
@@ -152,9 +111,6 @@ export class Engine {
             winTeam: match.winner,
             loseTeam: match.loser,
             beforeElos,
-            beforePairwise,
-            winnerPairwiseDelta: winnerPairwiseChange,
-            loserPairwiseDelta: loserPairwiseChange,
         }
     }
 }
@@ -165,10 +121,13 @@ export interface EngineAndMatches {
 }
 
 export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
+    // Team rating is just the sum of the two players' Elos. A per-pair "chemistry"
+    // adjustment was evaluated (src/eval, experience-filtered objective) and
+    // removed: it OVERFIT — lower train loss but higher held-out loss on matches
+    // between rated players — so turning it off improved every eval objective.
     normalK: 20.0,
     highK: 80,
     highKMatchCount: 10,
-    pairwiseFactor: 0.3,
 };
 
 export function createEngine(

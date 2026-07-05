@@ -47,13 +47,8 @@ export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
       return history
     }
 
-    // Team ELO history (sum of individual ELOs + pairwise adjustment)
+    // Team ELO history (sum of individual ELOs)
     const [player1, player2] = selectedPlayers
-    const getPairwiseKey = (p1: PlayerName, p2: PlayerName): string => {
-      return p1 < p2 ? `${p1}:${p2}` : `${p2}:${p1}`
-    }
-    const pairKey = getPairwiseKey(player1, player2)
-
     const history: number[] = []
 
     // Filter matches for this team
@@ -65,8 +60,7 @@ export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
     for (const match of teamMatches) {
       const elo1 = match.beforeElos[player1] || 500
       const elo2 = match.beforeElos[player2] || 500
-      const pairwise = match.beforePairwise.get(pairKey) || 0
-      history.push(elo1 + elo2 + pairwise)
+      history.push(elo1 + elo2)
     }
 
     // Add final data point showing elo after the last match
@@ -74,14 +68,10 @@ export function EloGraph({ allMatches, selectedPlayers }: EloGraphProps) {
       const lastMatch = teamMatches[teamMatches.length - 1]
       const lastElo1 = lastMatch.beforeElos[player1] || 500
       const lastElo2 = lastMatch.beforeElos[player2] || 500
-      const lastPairwise = lastMatch.beforePairwise.get(pairKey) || 0
       const eloChange1 = lastMatch.eloChanges.get(player1) || 0
       const eloChange2 = lastMatch.eloChanges.get(player2) || 0
-      const pairwiseDelta = lastMatch.winTeam.has(player1) && lastMatch.winTeam.has(player2)
-        ? lastMatch.winnerPairwiseDelta
-        : lastMatch.loserPairwiseDelta
 
-      history.push((lastElo1 + eloChange1) + (lastElo2 + eloChange2) + (lastPairwise + pairwiseDelta))
+      history.push((lastElo1 + eloChange1) + (lastElo2 + eloChange2))
     }
 
     return history

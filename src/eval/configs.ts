@@ -2,14 +2,14 @@ import { DEFAULT_ENGINE_CONFIG, type EngineConfig } from '../engine/main'
 import type { NamedConfig } from './harness'
 
 /**
- * The configs to evaluate. Edit this list to iterate the model:
- *   1. tweak a copy of the baseline (K factors, pairwiseFactor, seeds, …),
- *   2. run `npm run eval`,
- *   3. read the leaderboard — lowest held-out test log loss wins,
- *   4. promote the winner into DEFAULT_ENGINE_CONFIG in src/engine/main.ts.
- *
- * `baseline` is always the live production config, so every candidate is scored
- * against what the app currently ships.
+ * Configs to evaluate.
+ *   npm run eval                              (single 80/20 split, full report)
+ *   npx vitest run src/eval/multisplit.test.ts  (robust mean over splits)
+ * Both apply the experience filter by default (EVAL_MIN_GAMES=5) — they score
+ * only matches where every player already had >=5 prior games, so tuning is not
+ * dominated by unconverged-rating noise. Override with EVAL_MIN_GAMES=0 to score
+ * everything. Then promote the winner into DEFAULT_ENGINE_CONFIG in
+ * src/engine/main.ts.
  */
 
 export const baseline: NamedConfig = {
@@ -24,11 +24,10 @@ const withOverrides = (name: string, overrides: Partial<EngineConfig>): NamedCon
 
 export const candidates: NamedConfig[] = [
   baseline,
-  // --- example sweeps; keep, edit, or delete freely ---
   withOverrides('normalK=16', { normalK: 16 }),
   withOverrides('normalK=24', { normalK: 24 }),
-  withOverrides('pairwise=0.2', { pairwiseFactor: 0.2 }),
-  withOverrides('pairwise=0.45', { pairwiseFactor: 0.45 }),
   withOverrides('highK=60', { highK: 60 }),
   withOverrides('highK=100', { highK: 100 }),
+  withOverrides('highKMatchCount=6', { highKMatchCount: 6 }),
+  withOverrides('highKMatchCount=13', { highKMatchCount: 13 }),
 ]
