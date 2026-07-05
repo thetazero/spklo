@@ -4,7 +4,13 @@ import { loadEvalMatches, type EvalDataset } from './data'
 import { runSplitEval, compareConfigs } from './harness'
 import { formatReport, formatComparison } from './format'
 import { baseline, candidates } from './configs'
-import { computeSummaryStats, BASELINE_LOG_LOSS } from './metrics'
+import {
+  computeSummaryStats,
+  defaultCalibrationBucketCount,
+  computeRelativeDifference,
+  formatRelativeDiff,
+  BASELINE_LOG_LOSS,
+} from './metrics'
 import type { MatchAnalysis } from '../engine/main'
 
 /**
@@ -74,5 +80,19 @@ describe('metric math', () => {
     const s = computeSummaryStats([])
     expect(s.totalMatches).toBe(0)
     expect(Number.isNaN(s.avgLogLoss)).toBe(false)
+  })
+
+  it('scales calibration buckets with sample size (~25 datapoints per bucket)', () => {
+    expect(defaultCalibrationBucketCount(0)).toBe(2) // floor
+    expect(defaultCalibrationBucketCount(30)).toBe(2) // 60 datapoints
+    expect(defaultCalibrationBucketCount(60)).toBe(4) // 120 datapoints
+    expect(defaultCalibrationBucketCount(240)).toBe(10) // ceiling
+  })
+
+  it('reports relative difference against zero actual as n/a, not Infinity', () => {
+    expect(computeRelativeDifference(0, 0)).toBe(0)
+    expect(Number.isNaN(computeRelativeDifference(3, 0))).toBe(true)
+    expect(formatRelativeDiff(computeRelativeDifference(3, 0))).toBe('—')
+    expect(formatRelativeDiff(computeRelativeDifference(6, 4))).toBe('+50.0%')
   })
 })

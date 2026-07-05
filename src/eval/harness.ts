@@ -31,7 +31,7 @@ export interface EvalReport {
 function metricsFor(matches: MatchAnalysis[]): SplitMetrics {
   return {
     summary: computeSummaryStats(matches),
-    calibration: computeCalibrationBuckets(matches, 5),
+    calibration: computeCalibrationBuckets(matches),
     players: computePlayerStats(matches),
   }
 }

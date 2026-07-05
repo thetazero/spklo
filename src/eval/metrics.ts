@@ -33,9 +33,19 @@ export interface SummaryStats {
   skillScore: number
 }
 
+/**
+ * Pick a calibration bucket count from the sample size. Each match contributes
+ * two mirrored datapoints, and a bucket needs ~25 datapoints before its observed
+ * win rate is worth reading; clamped to [2, 10] so tiny slices still get a table
+ * and huge ones don't get absurdly thin ranges.
+ */
+export function defaultCalibrationBucketCount(matchCount: number): number {
+  return Math.max(2, Math.min(10, Math.floor((matchCount * 2) / 25)))
+}
+
 export function computeSummaryStats(
   matches: MatchAnalysis[],
-  eceBuckets = 5,
+  eceBuckets?: number,
 ): SummaryStats {
   const totalMatches = matches.length
   if (totalMatches === 0) {
@@ -92,7 +102,7 @@ export interface CalibrationBucket {
  */
 export function computeCalibrationBuckets(
   matches: MatchAnalysis[],
-  numBuckets: number,
+  numBuckets: number = defaultCalibrationBucketCount(matches.length),
 ): CalibrationBucket[] {
   const bucketSize = 0.5 / numBuckets // Only 50-100% range
   const buckets: CalibrationBucket[] = []
@@ -135,7 +145,7 @@ export function computeCalibrationBuckets(
  */
 export function computeExpectedCalibrationError(
   matches: MatchAnalysis[],
-  numBuckets: number,
+  numBuckets: number = defaultCalibrationBucketCount(matches.length),
 ): number {
   const buckets = computeCalibrationBuckets(matches, numBuckets)
   const total = buckets.reduce((sum, b) => sum + b.count, 0)
@@ -195,9 +205,11 @@ export function computePlayerStats(
 }
 
 export function computeRelativeDifference(expected: number, actual: number): number {
-  return expected > 0 ? ((expected - actual) / actual) * 100 : 0
+  if (actual === 0) return expected === 0 ? 0 : NaN
+  return ((expected - actual) / actual) * 100
 }
 
 export function formatRelativeDiff(diff: number): string {
+  if (!Number.isFinite(diff)) return '—'
   return diff > 0 ? `+${diff.toFixed(1)}%` : `${diff.toFixed(1)}%`
 }

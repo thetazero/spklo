@@ -1,5 +1,5 @@
 import { BASELINE_LOG_LOSS, type SummaryStats, type CalibrationBucket, type PlayerStats } from './metrics'
-import { formatRelativeDiff, computeRelativeDifference } from './metrics'
+import { formatRelativeDiff, computeRelativeDifference, defaultCalibrationBucketCount } from './metrics'
 import type { EvalReport, SplitMetrics } from './harness'
 
 const pct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`
@@ -13,7 +13,7 @@ function summaryLines(s: SummaryStats): string[] {
     `  implied win prob .... ${pct(s.impliedWinProbability, 2)}`,
     `  accuracy ............ ${pct(s.accuracy)}`,
     `  brier ............... ${s.brier.toFixed(4)}`,
-    `  calibration err ..... ${pct(s.ece, 2)}`,
+    `  calibration err ..... ${pct(s.ece, 2)}   (${defaultCalibrationBucketCount(s.totalMatches)} buckets)`,
   ]
 }
 
@@ -71,18 +71,18 @@ export function formatReport(report: EvalReport, verbose = true): string {
 /** One-line-per-config leaderboard, assumed already sorted best-first. */
 export function formatComparison(reports: EvalReport[]): string {
   const lines = [
-    '='.repeat(78),
+    '='.repeat(90),
     '  CONFIG COMPARISON (sorted by held-out test log loss, best first)',
-    '='.repeat(78),
-    '  rank  config                    test loss  test acc  test skill  train loss',
-    '  ' + '-'.repeat(74),
+    '='.repeat(90),
+    '  rank  config                    test loss  test brier  test acc  test skill  train loss',
+    '  ' + '-'.repeat(86),
   ]
   reports.forEach((r, i) => {
     const t = r.test.summary
     lines.push(
-      `  ${String(i + 1).padStart(4)}  ${r.name.padEnd(24)}  ${t.avgLogLoss.toFixed(4).padStart(9)}  ${(t.accuracy * 100).toFixed(1).padStart(7)}%  ${(t.skillScore * 100).toFixed(1).padStart(9)}%  ${r.train.summary.avgLogLoss.toFixed(4).padStart(10)}`,
+      `  ${String(i + 1).padStart(4)}  ${r.name.padEnd(24)}  ${t.avgLogLoss.toFixed(4).padStart(9)}  ${t.brier.toFixed(4).padStart(10)}  ${(t.accuracy * 100).toFixed(1).padStart(7)}%  ${(t.skillScore * 100).toFixed(1).padStart(9)}%  ${r.train.summary.avgLogLoss.toFixed(4).padStart(10)}`,
     )
   })
-  lines.push('='.repeat(78))
+  lines.push('='.repeat(90))
   return lines.join('\n')
 }
