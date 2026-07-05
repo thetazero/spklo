@@ -25,10 +25,10 @@ const withOverrides = (name: string, overrides: Partial<EngineConfig>): NamedCon
 export const candidates: NamedConfig[] = [
   baseline,
   // --- example sweeps; keep, edit, or delete freely ---
-  withOverrides('normalK=8', { normalK: 8 }),
-  withOverrides('normalK=12', { normalK: 12 }),
-  withOverrides('pairwise=0.3', { pairwiseFactor: 0.3 }),
-  withOverrides('pairwise=0', { pairwiseFactor: 0 }),
+  withOverrides('normalK=16', { normalK: 16 }),
+  withOverrides('normalK=24', { normalK: 24 }),
+  withOverrides('pairwise=0.2', { pairwiseFactor: 0.2 }),
+  withOverrides('pairwise=0.45', { pairwiseFactor: 0.45 }),
   withOverrides('highK=60', { highK: 60 }),
   withOverrides('highK=100', { highK: 100 }),
 ]

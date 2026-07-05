@@ -1,17 +1,13 @@
 import type { Match, PlayerName } from "./types.ts";
 
 import { calculateChanges } from "./eloChanger.ts";
-import { PlayerEloState, type EloAdjustmentEvent } from "./PlayerEloState.ts";
+import { PlayerEloState } from "./PlayerEloState.ts";
 
 export interface EngineConfig {
     highK: number;
     normalK: number;
-    seededK: number; // k after being elo seeded
-    seededMatchCount: number; // number of matches to consider a player as "seeded"
     highKMatchCount: number;
     pairwiseFactor: number;
-    elligibleForEloRedistributionThresholdMatches: number;
-    initialSeeds: { [key in PlayerName]: number };
 }
 
 export interface MatchAnalysis {
@@ -23,7 +19,6 @@ export interface MatchAnalysis {
     beforePairwise: Map<string, number>;
     winnerPairwiseDelta: number;
     loserPairwiseDelta: number;
-    adjustmentEvent: EloAdjustmentEvent | null;
 }
 
 export class Engine {
@@ -36,13 +31,9 @@ export class Engine {
     constructor(config: EngineConfig) {
         this.config = config;
         this.playerState = new PlayerEloState({
-            seeds: config.initialSeeds,
             normalK: config.normalK,
             highK: config.highK,
             highKMatchCount: config.highKMatchCount,
-            seededK: config.seededK,
-            seededMatchCount: config.seededMatchCount,
-            elligibleForEloRedistributionThresholdMatches: config.elligibleForEloRedistributionThresholdMatches,
         });
         this.bceLoss = 0;
         this.pairwiseAdjustments = new Map();
@@ -98,9 +89,6 @@ export class Engine {
         if (match.winner.size !== 2 || match.loser.size !== 2) {
             throw new Error(`Expected exactly 2 players per team, got ${match.winner.size} winners and ${match.loser.size} losers`);
         }
-        // Apply player seed adjustments before the match
-        const adjustmentEvent = this.playerState.beforeMatchHook(new Set([...match.winner, ...match.loser]));
-
         // Get combined team ELOs with pairwise adjustments
         const winnerElo = this.getCombinedEloWithPairwise(match.winner);
         const loserElo = this.getCombinedEloWithPairwise(match.loser);
@@ -167,7 +155,6 @@ export class Engine {
             beforePairwise,
             winnerPairwiseDelta: winnerPairwiseChange,
             loserPairwiseDelta: loserPairwiseChange,
-            adjustmentEvent,
         }
     }
 }
@@ -178,22 +165,10 @@ export interface EngineAndMatches {
 }
 
 export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
-    normalK: 10.0,
-    seededK: 14.0,
-    seededMatchCount: 10,
+    normalK: 20.0,
     highK: 80,
     highKMatchCount: 10,
-    pairwiseFactor: 0.6,
-    initialSeeds: {
-        // "katie": 160,
-        // "yonah": 480,
-        // "sophia": 440,
-        "loshaleft": 240,
-        "igor": 400,
-        "tatiana": 420,
-        "andrei": 450,
-    },
-    elligibleForEloRedistributionThresholdMatches: 20,
+    pairwiseFactor: 0.3,
 };
 
 export function createEngine(
