@@ -24,10 +24,9 @@ const withOverrides = (name: string, overrides: Partial<EngineConfig>): NamedCon
 
 export const candidates: NamedConfig[] = [
   baseline,
-  withOverrides('normalK=16', { normalK: 16 }),
-  withOverrides('normalK=24', { normalK: 24 }),
-  withOverrides('highK=60', { highK: 60 }),
-  withOverrides('highK=100', { highK: 100 }),
-  withOverrides('highKMatchCount=6', { highKMatchCount: 6 }),
-  withOverrides('highKMatchCount=13', { highKMatchCount: 13 }),
+  // meanReversion=0 recovers the previous production model (plain Elo).
+  withOverrides('revert off (old prod)', { meanReversion: 0 }),
+  withOverrides('revert 0.003', { meanReversion: 0.003 }),
+  withOverrides('revert 0.0075', { meanReversion: 0.0075 }),
+  withOverrides('revert 0.01', { meanReversion: 0.01 }),
 ]
