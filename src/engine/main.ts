@@ -7,6 +7,11 @@ export interface EngineConfig {
     highK: number;
     normalK: number;
     highKMatchCount: number;
+    /** After each match, pull participants' ratings toward the 500 baseline:
+     * r ← 500 + (1 - meanReversion) * (r - 500). Online L2 regularization —
+     * counters rating drift and overconfidence from small samples. 0/unset
+     * disables. */
+    meanReversion?: number;
 }
 
 export interface MatchAnalysis {
@@ -99,6 +104,15 @@ export class Engine {
             this.playerState.incrementMatchCount(player);
         }
 
+        // Online L2: nudge participants back toward the 500 baseline.
+        const rho = this.config.meanReversion;
+        if (rho) {
+            for (const player of [...match.winner, ...match.loser]) {
+                const r = this.getElo(player);
+                this.playerState.setElo(player, 500 + (1 - rho) * (r - 500));
+            }
+        }
+
         // Track how often each teammate pair has played together (Teams UI stat).
         const winnerKey = this.getPairKey(winner1, winner2);
         const loserKey = this.getPairKey(loser1, loser2);
@@ -128,6 +142,13 @@ export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
     normalK: 20.0,
     highK: 80,
     highKMatchCount: 10,
+    // Multisplit eval (splits 0.7-0.85, ≥5 prior games): the only variant that
+    // beat tuned plain Elo on mean held-out log loss, with HIGHER train loss —
+    // true regularization, not overfit. Flat optimum across rho 0.003-0.01;
+    // 0.005 also beat baseline on the two splits where baseline does worst.
+    // (Glicko-lite, smooth K decay, weak-link teams, and prediction shrinkage
+    // were all evaluated in the same sweep and lost or tied — see PR.)
+    meanReversion: 0.005,
 };
 
 export function createEngine(
